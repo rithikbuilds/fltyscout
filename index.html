@@ -3,1105 +3,646 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Card Network Rule Tracker v3</title>
+<meta name="description" content="FlyScout — Card Network Rule Intelligence for cross-border payment companies"/>
+<title>FlyScout · Card Network Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Mono:wght@400;500&family=Lato:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#080b12;--bg2:#0e1220;--bg3:#141826;--bg4:#1a2035;--bg5:#202640;
-  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);
-  --text:#e4eaf8;--text2:#7e8fad;--text3:#3d4d6a;
-  --blue:#2d7cf6;--blue-dim:rgba(45,124,246,0.15);--blue-glow:rgba(45,124,246,0.08);
-  --visa:#4f6fcf;--visa-dim:rgba(79,111,207,0.15);
-  --mc:#d94f3c;--mc-dim:rgba(217,79,60,0.15);
-  --green:#10c27a;--green-dim:rgba(16,194,122,0.12);
-  --amber:#f59e0b;--amber-dim:rgba(245,158,11,0.12);
-  --red:#ef4444;--red-dim:rgba(239,68,68,0.12);
-  --purple:#8b5cf6;--purple-dim:rgba(139,92,246,0.12);
-  --teal:#06b6d4;--teal-dim:rgba(6,182,212,0.12);
-  --font:'Outfit',sans-serif;--mono:'JetBrains Mono',monospace;
-  --sidebar:228px;--hdr:54px;--r:8px;--r-lg:12px;--r-xl:16px;
+  --bg:#07080f;--bg2:#0d0f19;--bg3:#121521;--bg4:#181c2a;--bg5:#1d2233;
+  --b0:rgba(255,255,255,0.04);--b1:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.12);--b3:rgba(255,255,255,0.18);
+  --t1:#e4eaf8;--t2:#8591b0;--t3:#4a5370;
+  --blue:#2563eb;--blue-l:#3b82f6;--blue-ll:#60a5fa;
+  --blue-glow:rgba(37,99,235,0.14);--blue-ring:rgba(59,130,246,0.28);
+  --visa-bg:rgba(26,31,113,0.3);--visa-c:#818cf8;--visa-b:rgba(129,140,248,0.2);
+  --mc-bg:rgba(185,28,28,0.22);--mc-c:#fca5a5;--mc-b:rgba(252,165,165,0.2);
+  --g-bg:rgba(5,150,105,0.1);--g-t:#34d399;--g-b:rgba(52,211,153,0.22);
+  --a-bg:rgba(217,119,6,0.1);--a-t:#fbbf24;--a-b:rgba(251,191,36,0.22);
+  --r-bg:rgba(220,38,38,0.1);--r-t:#f87171;--r-b:rgba(248,113,113,0.22);
+  --p-bg:rgba(124,58,237,0.1);--p-t:#a78bfa;--p-b:rgba(167,139,250,0.22);
+  --tl-bg:rgba(8,145,178,0.1);--tl-t:#22d3ee;--tl-b:rgba(34,211,238,0.22);
+  --fd:'Bricolage Grotesque',sans-serif;--fb:'Lato',sans-serif;--fm:'DM Mono',monospace;
+  --r:8px;--r2:12px;--r3:16px;--sb:232px;--hdr:54px;--ease:.15s ease;
 }
-html,body{background:var(--bg);color:var(--text);font-family:var(--font);height:100%;overflow:hidden;font-size:14px}
+html,body{background:var(--bg);color:var(--t1);font-family:var(--fb);height:100%;overflow:hidden;-webkit-font-smoothing:antialiased}
+*:focus-visible{outline:2px solid var(--blue-l);outline-offset:2px}
 ::-webkit-scrollbar{width:4px;height:4px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-
-/* ── LAYOUT ── */
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+::selection{background:var(--blue-glow);color:var(--blue-ll)}
 .app{display:flex;height:100vh;overflow:hidden}
-.sidebar{width:var(--sidebar);flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+/* SIDEBAR */
+.sidebar{width:var(--sb);flex-shrink:0;background:var(--bg2);border-right:1px solid var(--b1);display:flex;flex-direction:column;overflow:hidden}
+.sb-head{padding:16px 14px 12px;border-bottom:1px solid var(--b1)}
+.logo{display:flex;align-items:center;gap:9px;margin-bottom:14px}
+.logo-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#1d4ed8,#2563eb);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 10px rgba(37,99,235,.4);flex-shrink:0}
+.logo-name{font-family:var(--fd);font-size:14px;font-weight:700;letter-spacing:-.3px}
+.logo-tag{font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:1px}
+.net-pills{display:flex;gap:5px}
+.np{flex:1;padding:4px 0;text-align:center;border-radius:5px;font-size:9px;font-weight:800;letter-spacing:.08em}
+.np-v{background:var(--visa-bg);color:var(--visa-c);border:1px solid var(--visa-b)}
+.np-m{background:var(--mc-bg);color:var(--mc-c);border:1px solid var(--mc-b)}
+.sb-scroll{flex:1;overflow-y:auto;padding:8px 6px}
+.nav-sec{margin-bottom:18px}
+.nav-lbl{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:0 9px;margin-bottom:5px}
+.ni{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--r);cursor:pointer;font-size:12px;color:var(--t2);transition:all var(--ease);border:1px solid transparent;user-select:none}
+.ni:hover{background:var(--bg3);color:var(--t1)}
+.ni.active{background:var(--blue-glow);color:var(--blue-ll);border-color:var(--blue-ring)}
+.ni i{font-size:15px;flex-shrink:0}
+.ni-b{margin-left:auto;font-size:9px;font-weight:800;padding:2px 6px;border-radius:8px;background:var(--blue);color:#fff}
+.ni-b.amber{background:var(--a-t);color:#000;animation:p 2s infinite}
+.ni-b.red{background:var(--r-t);color:#fff;animation:p 2s infinite}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.5}}
+.mkt-list{display:flex;flex-direction:column;gap:1px}
+.mki{display:flex;align-items:center;gap:7px;padding:6px 10px;border-radius:var(--r);cursor:pointer;font-size:11px;color:var(--t2);transition:all var(--ease)}
+.mki:hover{background:var(--bg3);color:var(--t1)}
+.mki.active{background:var(--bg3);color:var(--t1)}
+.mki-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-left:auto}
+.ai-bar{margin:0 6px;padding:9px 12px;border-radius:var(--r2);border:1px solid var(--b1);background:var(--bg3);display:flex;align-items:center;gap:8px}
+.ai-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.ai-dot.live{background:var(--g-t);box-shadow:0 0 6px rgba(52,211,153,.5);animation:live 2s infinite}
+.ai-dot.fallback{background:var(--a-t);animation:p 2s infinite}
+@keyframes live{0%,100%{opacity:1}50%{opacity:.4}}
+.sb-foot{padding:10px 14px;border-top:1px solid var(--b1);font-size:9px;color:var(--t3);display:flex;align-items:center;gap:5px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--g-t);animation:live 2s infinite;flex-shrink:0}
+/* MAIN */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
-.content{flex:1;overflow-y:auto;padding:18px 20px}
-
-/* ── SIDEBAR ── */
-.s-head{padding:16px 14px 12px;border-bottom:1px solid var(--border)}
-.logo{display:flex;align-items:center;gap:9px;margin-bottom:12px}
-.logo-box{width:30px;height:30px;border-radius:7px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.logo-name{font-size:13px;font-weight:700;letter-spacing:-.3px}
-.logo-sub{font-size:10px;color:var(--text3);margin-top:1px}
-.net-row{display:flex;gap:5px}
-.net-tag{flex:1;text-align:center;padding:4px 0;border-radius:5px;font-size:10px;font-weight:700;letter-spacing:.05em}
-.net-v{background:var(--visa-dim);color:var(--visa);border:1px solid rgba(79,111,207,.2)}
-.net-m{background:var(--mc-dim);color:var(--mc);border:1px solid rgba(217,79,60,.2)}
-
-.s-nav{flex:1;overflow-y:auto;padding:8px}
-.s-section{margin-bottom:4px}
-.s-lbl{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);padding:8px 8px 4px}
-.s-item{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:var(--r);cursor:pointer;font-size:12.5px;color:var(--text2);transition:all .13s;border:1px solid transparent;margin-bottom:1px}
-.s-item:hover{background:var(--bg3);color:var(--text)}
-.s-item.on{background:var(--blue-dim);color:var(--blue);border-color:rgba(45,124,246,.2)}
-.s-item i{font-size:15px;flex-shrink:0}
-.s-badge{margin-left:auto;font-size:9px;font-weight:700;padding:2px 5px;border-radius:8px;background:var(--blue);color:#fff}
-.s-badge.red{background:var(--red);animation:pb 2s infinite}
-.s-badge.amber{background:var(--amber)}
-@keyframes pb{0%,100%{opacity:1}50%{opacity:.5}}
-
-.mkt-list{padding:4px 8px 8px}
-.mkt-row{display:flex;align-items:center;gap:7px;padding:5px 9px;border-radius:var(--r);cursor:pointer;font-size:12px;color:var(--text2);transition:all .13s;margin-bottom:1px}
-.mkt-row:hover{background:var(--bg3);color:var(--text)}
-.mkt-row.on{background:var(--bg3);color:var(--text);border:1px solid var(--border2)}
-.mkt-row .ct{margin-left:auto;font-size:10px;color:var(--text3)}
-.mkt-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
-
-.s-foot{padding:10px 14px;border-top:1px solid var(--border);font-size:10px;color:var(--text3);display:flex;align-items:center;gap:5px}
-.live{width:6px;height:6px;border-radius:50%;background:var(--green);animation:lv 2s infinite;flex-shrink:0}
-@keyframes lv{0%,100%{opacity:1}50%{opacity:.25}}
-
-/* ── TOPBAR ── */
-.topbar{height:var(--hdr);border-bottom:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;padding:0 18px;gap:12px;flex-shrink:0}
-.tb-title{font-size:15px;font-weight:600;flex:1}
-.tb-sub{font-size:11px;color:var(--text3);margin-top:1px}
-.tb-btns{display:flex;gap:6px}
-.ib{width:30px;height:30px;border-radius:var(--r);background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:14px;transition:all .13s;position:relative}
-.ib:hover{background:var(--bg4);color:var(--text)}
-.ndot{position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid var(--bg2)}
-
-/* ── PANEL ── */
+.topbar{height:var(--hdr);border-bottom:1px solid var(--b1);background:var(--bg2);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0}
+.tb-info{flex:1;min-width:0}
+.tb-title{font-family:var(--fd);font-size:15px;font-weight:600}
+.tb-sub{font-size:10px;color:var(--t3);margin-top:1px}
+.tb-right{display:flex;gap:6px;align-items:center;flex-shrink:0}
+.ib{width:32px;height:32px;border-radius:var(--r);background:var(--bg3);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);font-size:15px;transition:all var(--ease);position:relative}
+.ib:hover{background:var(--bg4);color:var(--t1);border-color:var(--b2)}
+.ib-dot{position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:var(--r-t);border:1.5px solid var(--bg2)}
+.content{flex:1;overflow-y:auto;padding:20px}
 .panel{display:none}
-.panel.on{display:block;animation:fi .2s ease}
+.panel.active{display:block;animation:fi .22s ease}
 @keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── STAT CARDS ── */
-.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
-.stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 16px}
-.stat-n{font-family:var(--font);font-size:26px;font-weight:700;line-height:1;margin-bottom:3px}
-.stat-l{font-size:11px;color:var(--text2)}
-.stat-s{font-size:10px;color:var(--text3);margin-top:2px;display:flex;align-items:center;gap:3px}
-
-/* ── SECTION HDR ── */
-.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.sh-t{font-size:13px;font-weight:600}
-.sh-a{font-size:11px;color:var(--blue);cursor:pointer;display:flex;align-items:center;gap:3px}
-.sh-a:hover{text-decoration:underline}
-
-/* ── MARKET TILES ── */
-.mkt-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
-.mkt-tile{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:12px 6px;text-align:center;cursor:pointer;transition:all .13s}
-.mkt-tile:hover{border-color:var(--border2)}
-.mkt-tile.on{border-color:rgba(45,124,246,.45);background:var(--blue-glow)}
+/* SKELETON */
+.skeleton{background:linear-gradient(90deg,var(--bg3) 25%,var(--bg4) 50%,var(--bg3) 75%);background-size:200% 100%;animation:sh 1.5s infinite;border-radius:var(--r)}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+/* SHARED */
+.card{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:14px 16px;transition:border-color var(--ease)}
+.card-sm{background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r);padding:10px 12px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.sep{width:100%;height:1px;background:var(--b1);margin:16px 0}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sec-title{font-family:var(--fd);font-size:13px;font-weight:600}
+.sec-act{font-size:11px;color:var(--blue-ll);cursor:pointer;display:flex;align-items:center;gap:3px;background:none;border:none;font-family:var(--fb)}
+.sec-act:hover{text-decoration:underline}
+/* BADGE */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:9px;font-weight:800;letter-spacing:.04em;flex-shrink:0;white-space:nowrap}
+.bv{background:var(--visa-bg);color:var(--visa-c);border:1px solid var(--visa-b)}
+.bm{background:var(--mc-bg);color:var(--mc-c);border:1px solid var(--mc-b)}
+.bi{background:var(--a-bg);color:var(--a-t);border:1px solid var(--a-b)}
+.bs{background:var(--p-bg);color:var(--p-t);border:1px solid var(--p-b)}
+.bc{background:var(--g-bg);color:var(--g-t);border:1px solid var(--g-b)}
+.bgr{background:var(--bg4);color:var(--t2);border:1px solid var(--b1)}
+.bnew{background:var(--r-bg);color:var(--r-t);border:1px solid var(--r-b);animation:p 2s infinite}
+.bteal{background:var(--tl-bg);color:var(--tl-t);border:1px solid var(--tl-b)}
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:18px}
+.sc{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:16px 18px;position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--al,var(--blue-ll)),transparent)}
+.sv{font-family:var(--fd);font-size:28px;font-weight:800;line-height:1;margin-bottom:4px}
+.sl{font-size:11px;color:var(--t2)}
+.ss{font-size:10px;color:var(--t3);margin-top:3px;display:flex;align-items:center;gap:4px}
+/* CHANGE CARD */
+.cc{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:13px 15px;margin-bottom:9px;cursor:pointer;transition:all var(--ease)}
+.cc:hover{border-color:var(--b2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.cc.hl{border-left:3px solid var(--blue-ll)}
+.cc-hdr{display:flex;gap:7px;align-items:flex-start;margin-bottom:7px;flex-wrap:wrap}
+.cc-meta{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
+.cc-date{font-size:10px;color:var(--t3);font-family:var(--fm)}
+.cc-title{font-size:12px;font-weight:600;line-height:1.45;margin-bottom:4px}
+.cc-desc{font-size:11px;color:var(--t2);line-height:1.65}
+.cc-imp{margin-top:8px;padding:7px 10px;background:var(--bg3);border-radius:var(--r);border-left:2px solid var(--blue-ll)}
+.cc-imp-l{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:3px}
+.cc-imp-t{font-size:11px;color:var(--t2);line-height:1.5}
+/* MARKET TILES */
+.mkt-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:9px;margin-bottom:18px}
+.mkt-tile{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:13px 8px;text-align:center;cursor:pointer;transition:all var(--ease)}
+.mkt-tile:hover{border-color:var(--b2);background:var(--bg3)}
+.mkt-tile.sel{border-color:var(--blue-ring);background:var(--blue-glow)}
 .mkt-flag{font-size:22px;margin-bottom:5px}
-.mkt-code{font-size:11px;font-weight:600;margin-bottom:3px}
-.mkt-ct{font-size:10px;color:var(--text3)}
-
-/* ── CHANGE CARD ── */
-.cc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:13px 15px;margin-bottom:8px;cursor:pointer;transition:border-color .13s}
-.cc:hover{border-color:var(--border2)}
-.cc.hl{border-left:2px solid var(--blue)}
-.cc-top{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
-.cc-badges{display:flex;gap:5px;flex-wrap:wrap}
-.cc-right{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
-.cc-date{font-size:10px;color:var(--text3);font-family:var(--mono)}
-.cc-title{font-size:12.5px;font-weight:600;line-height:1.4;margin-bottom:4px}
-.cc-desc{font-size:11.5px;color:var(--text2);line-height:1.6}
-.cc-tags{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
-
-/* ── BADGE ── */
-.b{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:.03em;flex-shrink:0}
-.b-v{background:var(--visa-dim);color:var(--visa);border:1px solid rgba(79,111,207,.25)}
-.b-m{background:var(--mc-dim);color:var(--mc);border:1px solid rgba(217,79,60,.25)}
-.b-ix{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,.25)}
-.b-sx{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(139,92,246,.25)}
-.b-cnp{background:var(--green-dim);color:var(--green);border:1px solid rgba(16,194,122,.25)}
-.b-mkt{background:var(--bg4);color:var(--text2);border:1px solid var(--border)}
-.b-new{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.25);animation:pb 2s infinite}
-.b-pred{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(6,182,212,.25)}
-
-/* ── FILTERS ── */
-.filter-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:12px}
-.fl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);white-space:nowrap}
-.fc{padding:4px 9px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);cursor:pointer;font-size:11px;color:var(--text2);transition:all .13s;font-family:var(--font)}
-.fc:hover{border-color:var(--border2);color:var(--text)}
-.fc.on{background:var(--blue-dim);color:var(--blue);border-color:rgba(45,124,246,.3)}
-.fc.von{background:var(--visa-dim);color:var(--visa);border-color:rgba(79,111,207,.3)}
-.fc.mon{background:var(--mc-dim);color:var(--mc);border-color:rgba(217,79,60,.3)}
-.f-div{width:1px;height:16px;background:var(--border);flex-shrink:0}
-.search-wrap{margin-left:auto;display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:5px 9px}
-.search-wrap i{font-size:13px;color:var(--text3)}
-.search-wrap input{background:none;border:none;outline:none;color:var(--text);font-size:11.5px;font-family:var(--font);width:130px}
-.search-wrap input::placeholder{color:var(--text3)}
-
-/* ── CHART PANEL ── */
-.chart-controls{display:flex;gap:6px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
-.ct-label{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-right:2px}
-.ct-btn{padding:4px 10px;border-radius:20px;border:1px solid var(--border);background:var(--bg3);cursor:pointer;font-size:11px;color:var(--text2);transition:all .13s;font-family:var(--font)}
-.ct-btn:hover{color:var(--text);border-color:var(--border2)}
-.ct-btn.on{background:var(--blue-dim);color:var(--blue);border-color:rgba(45,124,246,.3)}
-.chart-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-xl);padding:18px 18px 14px;margin-bottom:14px}
-.chart-title{font-size:12px;font-weight:600;margin-bottom:4px}
-.chart-sub{font-size:10px;color:var(--text3);margin-bottom:14px}
-.chart-canvas-wrap{position:relative;height:220px}
-.event-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
-.ev-leg{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text2)}
-.ev-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-
-/* ── PREDICTION PANEL ── */
-.pred-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.pred-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-xl);padding:16px 18px}
-.pred-card.high{border-left:2px solid var(--red)}
-.pred-card.med{border-left:2px solid var(--amber)}
-.pred-card.low{border-left:2px solid var(--green)}
-.pred-header{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
-.pred-icon{width:36px;height:36px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.pred-icon.high{background:var(--red-dim);color:var(--red)}
-.pred-icon.med{background:var(--amber-dim);color:var(--amber)}
-.pred-icon.low{background:var(--green-dim);color:var(--green)}
-.pred-title{font-size:12.5px;font-weight:600;line-height:1.4;margin-bottom:3px}
-.pred-prob{font-size:10px;color:var(--text2)}
-.prob-bar{height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;margin:8px 0}
-.prob-fill{height:100%;border-radius:2px}
-.prob-fill.high{background:linear-gradient(90deg,var(--red),#ff6b6b)}
-.prob-fill.med{background:linear-gradient(90deg,var(--amber),#fcd34d)}
-.prob-fill.low{background:linear-gradient(90deg,var(--green),#6ee7b7)}
-.pred-triggers{font-size:11px;color:var(--text2);line-height:1.6}
-.pred-trigger-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:5px}
-.trigger-item{display:flex;align-items:flex-start;gap:6px;padding:4px 0;border-bottom:1px solid var(--border);font-size:11px;color:var(--text2)}
-.trigger-item:last-child{border:none}
-.trigger-item i{color:var(--teal);font-size:12px;margin-top:1px;flex-shrink:0}
-.slack-row{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);font-size:11px;color:var(--text2)}
-.slack-row i{color:#4A154B;font-size:15px}
-.slack-toggle{margin-left:auto;cursor:pointer}
-
-/* ── CHAT ── */
-.chat-layout{display:flex;flex-direction:column;height:calc(100vh - var(--hdr) - 36px)}
-.chat-qs{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-xl);padding:12px 14px;margin-bottom:12px;flex-shrink:0}
-.chat-qs-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.chat-qs-title i{color:var(--blue)}
-.qs-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.q-chip{display:flex;align-items:flex-start;gap:7px;padding:7px 9px;border-radius:var(--r);background:var(--bg3);border:1px solid var(--border);cursor:pointer;font-size:11px;color:var(--text2);line-height:1.4;transition:all .13s}
-.q-chip:hover{background:var(--bg4);color:var(--text);border-color:var(--border2)}
-.q-chip i{color:var(--blue);font-size:12px;flex-shrink:0;margin-top:1px}
-.chat-msgs{flex:1;overflow-y:auto;padding-bottom:4px}
-.msg{display:flex;gap:9px;margin-bottom:12px;align-items:flex-start}
-.msg.u{flex-direction:row-reverse}
-.av{width:26px;height:26px;border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
-.av.ai{background:var(--blue);color:#fff}
-.av.u{background:var(--purple);color:#fff}
-.bubble{max-width:80%;padding:10px 13px;border-radius:var(--r-lg);font-size:12.5px;line-height:1.7;border:1px solid var(--border);background:var(--bg2)}
-.msg.u .bubble{background:var(--purple-dim);border-color:rgba(139,92,246,.3)}
+.mkt-code{font-size:11px;font-weight:700;margin-bottom:3px}
+.mkt-cnt{font-size:9px;color:var(--t3)}
+/* FILTER BAR */
+.fbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:10px 14px;background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);margin-bottom:13px}
+.fl{font-size:9px;color:var(--t3);font-weight:800;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
+.fc{padding:3px 9px;border-radius:20px;border:1px solid var(--b1);background:var(--bg3);cursor:pointer;font-size:10px;color:var(--t2);transition:all var(--ease);font-family:var(--fb);white-space:nowrap}
+.fc:hover{border-color:var(--b2);color:var(--t1)}
+.fc.on{background:var(--blue-glow);color:var(--blue-ll);border-color:var(--blue-ring)}
+.fc.von{background:var(--visa-bg);color:var(--visa-c);border-color:var(--visa-b)}
+.fc.mon{background:var(--mc-bg);color:var(--mc-c);border-color:var(--mc-b)}
+.fsep{width:1px;height:16px;background:var(--b1);flex-shrink:0}
+.srch-wrap{margin-left:auto;display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r);padding:5px 10px;transition:border-color var(--ease)}
+.srch-wrap:focus-within{border-color:var(--blue-ring)}
+.srch-wrap input{background:none;border:none;outline:none;color:var(--t1);font-size:11px;font-family:var(--fb);width:130px}
+.srch-wrap input::placeholder{color:var(--t3)}
+/* CHART */
+.chart-ctrl{display:flex;gap:6px;align-items:center;margin-bottom:13px;flex-wrap:wrap}
+.cctab{padding:4px 11px;border-radius:20px;border:1px solid var(--b1);background:var(--bg3);cursor:pointer;font-size:11px;color:var(--t2);transition:all var(--ease);font-family:var(--fb)}
+.cctab:hover{color:var(--t1)}
+.cctab.active{background:var(--blue-glow);color:var(--blue-ll);border-color:var(--blue-ring)}
+.chart-box{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:18px;margin-bottom:14px}
+.chart-box canvas{max-height:240px}
+.chart-leg{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
+.cleg{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t2)}
+.cleg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dq-bar{display:flex;align-items:center;gap:8px;padding:7px 12px;background:var(--g-bg);border:1px solid var(--g-b);border-radius:var(--r);font-size:10px;color:var(--g-t);margin-bottom:12px}
+/* PREDICTION */
+.pred-card{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:15px 17px;margin-bottom:10px;transition:border-color var(--ease)}
+.pred-card:hover{border-color:var(--b2)}
+.pred-hdr{display:flex;gap:10px;align-items:flex-start;margin-bottom:11px}
+.pred-risk{padding:3px 8px;border-radius:20px;font-size:9px;font-weight:800}
+.rh{background:var(--r-bg);color:var(--r-t);border:1px solid var(--r-b)}
+.rm{background:var(--a-bg);color:var(--a-t);border:1px solid var(--a-b)}
+.rl{background:var(--g-bg);color:var(--g-t);border:1px solid var(--g-b)}
+.pred-title{font-size:12px;font-weight:600;flex:1;line-height:1.4}
+.pred-prob{font-family:var(--fm);font-size:20px;font-weight:700;flex-shrink:0}
+.pred-meter{height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-bottom:10px}
+.pred-fill{height:100%;border-radius:2px;transition:width .6s ease}
+.trig-list{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.trig-item{display:flex;align-items:flex-start;gap:7px;font-size:10px;color:var(--t2);padding:5px 9px;background:var(--bg3);border-radius:var(--r);line-height:1.5}
+.pred-action{padding:9px 11px;background:var(--bg3);border-radius:var(--r);border-left:2px solid var(--a-t);font-size:11px;color:var(--t2);line-height:1.6;margin-bottom:10px}
+.pred-btns{display:flex;gap:6px;flex-wrap:wrap}
+.pb{padding:4px 10px;border-radius:var(--r);border:1px solid var(--b1);background:var(--bg3);cursor:pointer;font-size:10px;color:var(--t2);transition:all var(--ease);font-family:var(--fb);display:flex;align-items:center;gap:4px}
+.pb:hover{border-color:var(--b2);color:var(--t1)}
+.pb.primary{background:var(--blue-glow);color:var(--blue-ll);border-color:var(--blue-ring)}
+/* SLACK */
+.slack-box{background:#1a1d21;border:1px solid #2d3137;border-radius:var(--r2);padding:14px 16px;margin-top:12px}
+.slack-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.slack-ico{width:22px;height:22px;border-radius:4px;background:#4a154b;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.slack-ch{font-size:11px;color:#e8912d;font-weight:700;font-family:var(--fm)}
+.slack-ts{font-size:10px;color:#6b7280;margin-left:4px}
+.slack-msg{background:#222529;border-radius:var(--r);padding:11px 13px;border-left:4px solid var(--a-t)}
+.slack-bot{font-size:11px;font-weight:700;color:#1d9bd1;margin-bottom:5px;font-family:var(--fm)}
+.slack-body{font-size:11px;color:#d1d2d3;line-height:1.65}
+.slack-field{margin-top:8px;padding:8px 10px;background:#2a2d31;border-radius:5px}
+.slack-fk{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#8b9397;margin-bottom:3px}
+.slack-fv{font-size:11px;color:#d1d2d3}
+.slack-acts{display:flex;gap:6px;margin-top:9px}
+.slab{padding:4px 12px;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer;border:none;font-family:var(--fb)}
+.slab.p{background:#007a5a;color:#fff}
+.slab.s{background:#2d3137;color:#d1d2d3}
+/* CHAT */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - var(--hdr) - 40px)}
+.qs-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.qs-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px}
+.qs-item{padding:8px 11px;border:1px solid var(--b1);border-radius:var(--r2);cursor:pointer;font-size:11px;color:var(--t2);transition:all var(--ease);background:var(--bg2);display:flex;align-items:flex-start;gap:7px;line-height:1.5}
+.qs-item:hover{border-color:var(--b2);color:var(--t1);background:var(--bg3)}
+.qs-item i{font-size:13px;color:var(--t3);flex-shrink:0;margin-top:1px}
+.chat-body{flex:1;overflow-y:auto;padding-bottom:8px}
+.cmsg{display:flex;gap:9px;margin-bottom:12px;align-items:flex-start}
+.cmsg.u{flex-direction:row-reverse}
+.cavt{width:28px;height:28px;border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800}
+.cavt.ai{background:linear-gradient(135deg,var(--blue),#1d4ed8);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.3)}
+.cavt.u{background:var(--purple,#7c3aed);color:#fff}
+.cbub{max-width:80%;padding:11px 14px;border-radius:var(--r2);font-size:12px;line-height:1.7;border:1px solid var(--b1);background:var(--bg2)}
+.cmsg.u .cbub{background:var(--p-bg);border-color:var(--p-b)}
+.ai-prov-tag{font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:6px;display:flex;align-items:center;gap:4px}
 .typing{display:flex;gap:4px;align-items:center;padding:3px 0}
-.typing span{width:6px;height:6px;border-radius:50%;background:var(--text3);animation:ty .9s infinite}
+.typing span{width:6px;height:6px;border-radius:50%;background:var(--t3);animation:tp .9s infinite}
 .typing span:nth-child(2){animation-delay:.15s}
 .typing span:nth-child(3){animation-delay:.3s}
-@keyframes ty{0%,80%,100%{transform:translateY(0);opacity:.35}40%{transform:translateY(-5px);opacity:1}}
-.chat-inp-wrap{padding:10px 0 0;border-top:1px solid var(--border);flex-shrink:0}
-.chat-inp-row{display:flex;gap:7px;align-items:flex-end;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:9px 11px;transition:border-color .15s}
-.chat-inp-row:focus-within{border-color:rgba(45,124,246,.4)}
-.chat-inp-row textarea{flex:1;background:none;border:none;outline:none;resize:none;color:var(--text);font-size:12.5px;font-family:var(--font);line-height:1.5;max-height:90px;min-height:18px}
-.chat-inp-row textarea::placeholder{color:var(--text3)}
-.sb{width:30px;height:30px;border-radius:var(--r);background:var(--blue);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:14px;flex-shrink:0;transition:opacity .15s}
-.sb:disabled{opacity:.4;cursor:not-allowed}
-
-/* ── ALERTS ── */
-.al-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:13px 15px;margin-bottom:8px;display:flex;gap:11px;align-items:flex-start}
-.al-icon{width:34px;height:34px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.al-icon.cr{background:var(--red-dim);color:var(--red)}
-.al-icon.wa{background:var(--amber-dim);color:var(--amber)}
-.al-icon.inf{background:var(--blue-dim);color:var(--blue)}
-.al-body{flex:1;min-width:0}
-.al-title{font-size:12.5px;font-weight:600;margin-bottom:3px}
-.al-desc{font-size:11.5px;color:var(--text2);line-height:1.5}
-.al-time{font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:4px}
-.al-dis{background:none;border:1px solid var(--border);border-radius:var(--r);padding:3px 9px;font-size:10px;color:var(--text2);cursor:pointer;transition:all .13s;flex-shrink:0;font-family:var(--font)}
-.al-dis:hover{border-color:var(--border2);color:var(--text)}
-
-/* ── MODAL ── */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;z-index:999;backdrop-filter:blur(6px);animation:fi .2s}
-.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r-xl);padding:22px 26px;max-width:540px;width:92%;max-height:82vh;overflow-y:auto}
-.modal-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
-.modal-title{font-size:15px;font-weight:700;line-height:1.3}
-.modal-x{background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px;line-height:1;padding:0;flex-shrink:0;margin-top:-2px}
-
-/* ── TOAST ── */
-.toast{position:fixed;top:14px;right:14px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r-lg);padding:11px 14px;display:flex;gap:9px;align-items:flex-start;max-width:310px;z-index:9999;animation:si .3s ease;box-shadow:0 8px 28px rgba(0,0,0,.5)}
-.toast.out{animation:so .3s ease forwards}
-@keyframes si{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
-@keyframes so{from{opacity:1}to{opacity:0;transform:translateX(16px)}}
-.toast i{font-size:16px;flex-shrink:0;margin-top:1px}
-.t-title{font-size:12px;font-weight:600;margin-bottom:1px}
-.t-msg{font-size:11px;color:var(--text2);line-height:1.4}
-.t-x{margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:15px;line-height:1;padding:0;flex-shrink:0}
-
-/* ── MISC ── */
-.sep{width:100%;height:1px;background:var(--border);margin:14px 0}
-.empty{text-align:center;padding:40px;color:var(--text3);font-size:12px}
-.empty i{font-size:32px;display:block;margin-bottom:10px;opacity:.25}
-.info-box{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:10px;display:flex;gap:8px}
-.info-box i{color:var(--blue);font-size:14px;flex-shrink:0;margin-top:1px}
+@keyframes tp{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-5px);opacity:1}}
+.chat-input-area{padding:12px 0 0;border-top:1px solid var(--b1);flex-shrink:0}
+.chat-row{display:flex;gap:8px;align-items:flex-end;background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:9px 12px;transition:border-color var(--ease)}
+.chat-row:focus-within{border-color:var(--blue-ring)}
+.chat-row textarea{flex:1;background:none;border:none;outline:none;resize:none;color:var(--t1);font-size:12px;font-family:var(--fb);line-height:1.5;max-height:90px;min-height:18px}
+.chat-row textarea::placeholder{color:var(--t3)}
+.send-btn{width:30px;height:30px;border-radius:7px;background:var(--blue);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:14px;flex-shrink:0;transition:all var(--ease)}
+.send-btn:hover{background:var(--blue-l)}
+.send-btn:disabled{opacity:.4;cursor:not-allowed}
+.ai-status-bar{display:flex;align-items:center;gap:6px;margin-bottom:10px;padding:6px 10px;border-radius:var(--r);background:var(--bg3);border:1px solid var(--b1);font-size:10px;color:var(--t2)}
+/* ALERTS */
+.al-card{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:13px 15px;margin-bottom:9px;display:flex;gap:11px;align-items:flex-start;transition:border-color var(--ease)}
+.al-card:hover{border-color:var(--b2)}
+.al-icon{width:34px;height:34px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.al-c{background:var(--r-bg);color:var(--r-t)}
+.al-w{background:var(--a-bg);color:var(--a-t)}
+.al-i{background:var(--blue-glow);color:var(--blue-ll)}
+.al-title{font-size:12px;font-weight:600;margin-bottom:3px}
+.al-desc{font-size:11px;color:var(--t2);line-height:1.55}
+.al-meta{font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:3px}
+.al-dm{background:none;border:1px solid var(--b1);border-radius:var(--r);padding:3px 9px;font-size:10px;color:var(--t3);cursor:pointer;transition:all var(--ease);flex-shrink:0;font-family:var(--fb)}
+.al-dm:hover{border-color:var(--b2);color:var(--t1)}
+/* SETTINGS */
+.srow{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--b0)}
+.srow:last-child{border-bottom:none}
+.srow h4{font-size:12px;font-weight:600;margin-bottom:3px}
+.srow p{font-size:10px;color:var(--t2)}
+.toggle{width:36px;height:20px;border-radius:10px;border:none;cursor:pointer;position:relative;transition:background var(--ease);flex-shrink:0}
+.toggle.on{background:var(--blue)}
+.toggle.off{background:var(--bg4)}
+.toggle::after{content:'';position:absolute;top:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left var(--ease);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.toggle.on::after{left:19px}
+.toggle.off::after{left:3px}
+.cfg-input{background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r);padding:6px 10px;color:var(--t1);font-size:11px;font-family:var(--fm);transition:border-color var(--ease)}
+.cfg-input:focus{outline:none;border-color:var(--blue-ring)}
+.cfg-input::placeholder{color:var(--t3)}
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(4px);animation:fi .2s ease}
+.modal{background:var(--bg2);border:1px solid var(--b2);border-radius:var(--r3);padding:24px 28px;max-width:560px;width:90%;max-height:82vh;overflow-y:auto;box-shadow:0 24px 48px rgba(0,0,0,.6)}
+.modal-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+.modal-title{font-family:var(--fd);font-size:15px;font-weight:700;line-height:1.3}
+.modal-close{background:none;border:none;color:var(--t3);cursor:pointer;font-size:20px;line-height:1}
+/* TOAST */
+.toast{position:fixed;top:16px;right:16px;background:var(--bg3);border:1px solid var(--b2);border-radius:var(--r2);padding:12px 15px;display:flex;gap:10px;align-items:flex-start;max-width:310px;z-index:9999;animation:tsi .3s ease;box-shadow:0 12px 32px rgba(0,0,0,.5)}
+.toast.hide{animation:tso .3s ease forwards}
+@keyframes tsi{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+@keyframes tso{to{opacity:0;transform:translateX(18px)}}
+.t-close{margin-left:auto;background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1;padding:0}
+/* EMPTY */
+.empty{text-align:center;padding:48px 20px;color:var(--t3)}
+.empty i{font-size:36px;display:block;margin-bottom:12px;opacity:.25}
+.empty p{font-size:12px;line-height:1.6}
+@media(max-width:1100px){.stats-row{grid-template-columns:1fr 1fr}.mkt-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:800px){.sidebar{display:none}.g2,.g3,.g4{grid-template-columns:1fr}.qs-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="app">
-
-<!-- SIDEBAR -->
 <aside class="sidebar">
-  <div class="s-head">
+  <div class="sb-head">
     <div class="logo">
-      <div class="logo-box">💳</div>
-      <div><div class="logo-name">RuleTracker</div><div class="logo-sub">Network Intelligence</div></div>
+      <div class="logo-icon">🛩</div>
+      <div><div class="logo-name">FlyScout</div><div class="logo-tag">Card Network Intelligence v3.0</div></div>
     </div>
-    <div class="net-row"><div class="net-tag net-v">VISA</div><div class="net-tag net-m">MASTERCARD</div></div>
+    <div class="net-pills"><div class="np np-v">VISA</div><div class="np np-m">MASTERCARD</div></div>
   </div>
-  <div class="s-nav">
-    <div class="s-section">
-      <div class="s-lbl">Main</div>
-      <div class="s-item on" data-panel="dashboard" onclick="sw('dashboard',this)"><i class="ti ti-layout-dashboard"></i>Dashboard</div>
-      <div class="s-item" data-panel="changelog" onclick="sw('changelog',this)"><i class="ti ti-history"></i>Change Log<span class="s-badge" id="cl-ct">10</span></div>
-      <div class="s-item" data-panel="history" onclick="sw('history',this)"><i class="ti ti-chart-line"></i>History Chart</div>
-      <div class="s-item" data-panel="predict" onclick="sw('predict',this)"><i class="ti ti-crystal-ball"></i>AI Predictions<span class="s-badge amber">4</span></div>
-      <div class="s-item" data-panel="chat" onclick="sw('chat',this)"><i class="ti ti-message-circle"></i>AI Assistant</div>
-      <div class="s-item" data-panel="alerts" onclick="sw('alerts',this)"><i class="ti ti-bell"></i>Alerts<span class="s-badge red" id="al-ct">3</span></div>
+  <div class="sb-scroll">
+    <div class="nav-sec">
+      <div class="nav-lbl">Navigation</div>
+      <div class="ni active" onclick="sp('dashboard',this)"><i class="ti ti-layout-dashboard"></i>Dashboard</div>
+      <div class="ni" onclick="sp('changelog',this)"><i class="ti ti-history"></i>Change Log<span class="ni-b" id="cl-nb">10</span></div>
+      <div class="ni" onclick="sp('history',this)"><i class="ti ti-chart-line"></i>Rate History</div>
+      <div class="ni" onclick="sp('predict',this)"><i class="ti ti-brain"></i>Predictions<span class="ni-b amber">4</span></div>
+      <div class="ni" onclick="sp('chat',this)"><i class="ti ti-message-circle"></i>AI Assistant</div>
+      <div class="ni" onclick="sp('alerts',this)"><i class="ti ti-bell"></i>Alerts<span class="ni-b red" id="al-nb">3</span></div>
+      <div class="ni" onclick="sp('settings',this)"><i class="ti ti-settings"></i>Settings</div>
     </div>
-    <div class="s-section">
-      <div class="s-lbl">Filter by Market</div>
+    <div class="nav-sec">
+      <div class="nav-lbl">Markets</div>
       <div class="mkt-list" id="sb-mkts"></div>
     </div>
   </div>
-  <div class="s-foot"><div class="live"></div>Live · Jan 2024 → present</div>
+  <div style="padding:6px 6px 8px">
+    <div class="ai-bar" id="ai-bar">
+      <div class="ai-dot live" id="ai-dot"></div>
+      <div style="flex:1">
+        <div style="font-size:10px;font-weight:600;color:var(--t1)" id="ai-status-txt">AI Online</div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm)" id="ai-prov-txt">Provider: Claude</div>
+      </div>
+      <i class="ti ti-shield-check" style="font-size:14px;color:var(--g-t);flex-shrink:0"></i>
+    </div>
+  </div>
+  <div class="sb-foot"><div class="live-dot"></div>Live · Jan 2024 → present · 10 events</div>
 </aside>
-
-<!-- MAIN -->
 <div class="main">
   <header class="topbar">
-    <div><div class="tb-title" id="tb-title">Dashboard</div><div class="tb-sub" id="tb-sub">Interchange & surcharge rule overview across 7 acquiring markets</div></div>
-    <div class="tb-btns">
-      <div class="ib" onclick="toast_show('Syncing from scheme sources…','info')" title="Refresh"><i class="ti ti-refresh"></i></div>
-      <div class="ib" onclick="sw('alerts',document.querySelector('[data-panel=alerts]'))" title="Alerts"><i class="ti ti-bell"></i><div class="ndot" id="ndot"></div></div>
-      <div class="ib" onclick="toast_show('Slack integration: configure webhook in Settings','info')" title="Slack"><i class="ti ti-brand-slack"></i></div>
+    <div class="tb-info">
+      <div class="tb-title" id="tb-title">Dashboard</div>
+      <div class="tb-sub" id="tb-sub">Card network rule intelligence across 7 acquiring markets</div>
+    </div>
+    <div class="tb-right">
+      <div class="ib" onclick="refreshAll()" title="Refresh"><i class="ti ti-refresh"></i></div>
+      <div class="ib" onclick="sp('alerts',document.querySelectorAll('.ni')[5])" title="Alerts">
+        <i class="ti ti-bell"></i><div class="ib-dot" id="notif-dot"></div>
+      </div>
+      <div class="ib" onclick="sp('settings',document.querySelectorAll('.ni')[6])" title="Settings"><i class="ti ti-settings"></i></div>
     </div>
   </header>
-
   <div class="content" id="content">
-
     <!-- DASHBOARD -->
-    <div class="panel on" id="panel-dashboard">
-      <div class="stat-row" id="stat-row"></div>
-      <div class="sh"><div class="sh-t">Acquiring Markets</div><div class="sh-a" onclick="sw('changelog',document.querySelector('[data-panel=changelog]'))">View changes <i class="ti ti-arrow-right" style="font-size:12px"></i></div></div>
+    <div class="panel active" id="panel-dashboard">
+      <div class="stats-row">
+        <div class="sc" style="--al:var(--blue-ll)"><div class="sv" style="color:var(--blue-ll)">7</div><div class="sl">Acquiring markets</div><div class="ss"><i class="ti ti-globe" style="font-size:11px"></i>US·UK·EU·AU·SG·CA·JP</div></div>
+        <div class="sc" style="--al:var(--a-t)"><div class="sv" style="color:var(--a-t)">10</div><div class="sl">Rule changes tracked</div><div class="ss"><i class="ti ti-calendar" style="font-size:11px"></i>Since Jan 2024</div></div>
+        <div class="sc" style="--al:var(--p-t)"><div class="sv" style="color:var(--p-t)">4</div><div class="sl">Change predictions</div><div class="ss" style="color:var(--a-t)"><i class="ti ti-alert-circle" style="font-size:11px"></i>2 High probability</div></div>
+        <div class="sc" style="--al:var(--r-t)"><div class="sv" style="color:var(--r-t)">3</div><div class="sl">Active alerts</div><div class="ss" style="color:var(--r-t)"><i class="ti ti-bell" style="font-size:11px"></i>Require review</div></div>
+      </div>
+      <div class="sec-hdr"><div class="sec-title">Acquiring Markets</div><button class="sec-act" onclick="sp('changelog',document.querySelectorAll('.ni')[1])">All changes <i class="ti ti-arrow-right" style="font-size:11px"></i></button></div>
       <div class="mkt-grid" id="dash-mkts"></div>
-      <div class="sh" style="margin-top:4px"><div class="sh-t">Recent Rule Changes</div><div class="sh-a" onclick="sw('changelog',document.querySelector('[data-panel=changelog]'))">Full log <i class="ti ti-arrow-right" style="font-size:12px"></i></div></div>
+      <div class="sec-hdr"><div class="sec-title">Recent Rule Changes</div><button class="sec-act" onclick="sp('changelog',document.querySelectorAll('.ni')[1])">Full log <i class="ti ti-arrow-right" style="font-size:11px"></i></button></div>
       <div id="dash-changes"></div>
     </div>
-
     <!-- CHANGELOG -->
     <div class="panel" id="panel-changelog">
-      <div class="filter-bar">
+      <div class="fbar">
         <span class="fl">Network</span>
         <button class="fc von" id="f-visa" onclick="tf('visa',this)">Visa</button>
         <button class="fc mon" id="f-mc" onclick="tf('mc',this)">Mastercard</button>
-        <div class="f-div"></div>
+        <div class="fsep"></div>
         <span class="fl">Type</span>
-        <button class="fc on" id="f-ix" onclick="tf('interchange',this)">Interchange</button>
-        <button class="fc on" id="f-sx" onclick="tf('surcharge',this)">Surcharge</button>
+        <button class="fc on" id="f-interchange" onclick="tf('interchange',this)">Interchange</button>
+        <button class="fc on" id="f-surcharge" onclick="tf('surcharge',this)">Surcharge</button>
         <button class="fc on" id="f-cnp" onclick="tf('cnp',this)">CNP</button>
-        <div class="f-div"></div>
+        <div class="fsep"></div>
         <span class="fl">Market</span>
-        <div id="mkt-chips" style="display:flex;gap:5px;flex-wrap:wrap"></div>
-        <div class="search-wrap"><i class="ti ti-search"></i><input type="text" id="srch" placeholder="Search rules…" oninput="renderCL()"/></div>
+        <div id="mf-chips" style="display:flex;gap:5px;flex-wrap:wrap"></div>
+        <div class="srch-wrap"><i class="ti ti-search" style="color:var(--t3);font-size:13px"></i><input type="search" id="srch" placeholder="Search…" oninput="renderCL()"/></div>
       </div>
       <div id="cl-list"></div>
     </div>
-
-    <!-- HISTORY CHART -->
+    <!-- RATE HISTORY -->
     <div class="panel" id="panel-history">
-      <div class="chart-controls">
-        <span class="ct-label">Period</span>
-        <button class="ct-btn on" onclick="setRange('6m',this)">6 Months</button>
-        <button class="ct-btn" onclick="setRange('1y',this)">1 Year</button>
-        <button class="ct-btn" onclick="setRange('2y',this)">2 Years</button>
-        <button class="ct-btn" onclick="setRange('all',this)">All</button>
-        <div class="f-div" style="height:16px;margin:0 4px"></div>
-        <span class="ct-label">Network</span>
-        <button class="ct-btn on" id="ch-visa" onclick="toggleChartNet('visa',this)">Visa</button>
-        <button class="ct-btn on" id="ch-mc" onclick="toggleChartNet('mc',this)">Mastercard</button>
-        <div class="f-div" style="height:16px;margin:0 4px"></div>
-        <span class="ct-label">Market</span>
-        <select id="ch-mkt" onchange="renderCharts()" style="background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:11px;color:var(--text2);font-family:var(--font);outline:none;cursor:pointer">
-          <option value="ALL">All Markets</option>
-          <option value="US">🇺🇸 US</option><option value="UK">🇬🇧 UK</option>
-          <option value="EU">🇪🇺 EU</option><option value="AU">🇦🇺 AU</option>
-          <option value="SG">🇸🇬 SG</option><option value="CA">🇨🇦 CA</option><option value="JP">🇯🇵 JP</option>
-        </select>
+      <div class="dq-bar"><i class="ti ti-database-check"></i><span>Data sourced from published Visa/Mastercard interchange schedules &amp; regulatory filings · Confidence: <strong>High</strong> · Verified: May 2025</span></div>
+      <div class="sec-hdr"><div class="sec-title">Interchange Rate History</div><span class="badge bteal"><i class="ti ti-chart-line" style="font-size:9px"></i>18-month view</span></div>
+      <div class="chart-ctrl" id="chart-ctrl">
+        <span class="fl" style="margin-right:3px">Period</span>
+        <button class="cctab active" onclick="setPeriod('6m',this)">6M</button>
+        <button class="cctab" onclick="setPeriod('1y',this)">1Y</button>
+        <button class="cctab" onclick="setPeriod('2y',this)">2Y</button>
+        <div class="fsep"></div>
+        <span class="fl" style="margin-right:3px">View</span>
+        <button class="cctab active" onclick="setCT('credit',this)">Credit CNP</button>
+        <button class="cctab" onclick="setCT('debit',this)">Debit</button>
+        <button class="cctab" onclick="setCT('events',this)">Events</button>
       </div>
-
-      <div class="chart-wrap">
-        <div class="chart-title">Rule Change Activity Over Time</div>
-        <div class="chart-sub">Number of interchange and surcharge rule changes per quarter · hover for details</div>
-        <div class="chart-canvas-wrap"><canvas id="activity-chart"></canvas></div>
-        <div class="event-legend">
-          <div class="ev-leg"><div class="ev-dot" style="background:var(--visa)"></div>Visa changes</div>
-          <div class="ev-leg"><div class="ev-dot" style="background:var(--mc)"></div>Mastercard changes</div>
-          <div class="ev-leg"><div class="ev-dot" style="background:var(--amber)"></div>Regulatory trigger</div>
-          <div class="ev-leg"><div class="ev-dot" style="background:var(--purple)"></div>Market-wide impact</div>
-        </div>
-      </div>
-
-      <div class="sh" style="margin-top:2px"><div class="sh-t">CNP Surcharge Cap Trend by Market</div></div>
-      <div class="chart-wrap">
-        <div class="chart-title">Cross-Border CNP Interchange Rate Index</div>
-        <div class="chart-sub">Indexed effective average CNP interchange cost (Jan 2024 = 100) · by market</div>
-        <div class="chart-canvas-wrap" style="height:200px"><canvas id="rate-chart"></canvas></div>
-      </div>
-
-      <div class="sh"><div class="sh-t">Key Events Timeline</div></div>
-      <div id="timeline-list"></div>
+      <div class="chart-box"><canvas id="rateChart"></canvas><div class="chart-leg" id="chart-leg"></div></div>
+      <div class="sec-hdr" style="margin-top:4px"><div class="sec-title">Change Event Timeline</div></div>
+      <div id="evt-tl"></div>
     </div>
-
     <!-- PREDICTIONS -->
     <div class="panel" id="panel-predict">
-      <div class="info-box" style="margin-bottom:14px">
-        <i class="ti ti-brain"></i>
-        <div>AI analyzes historical triggers (regulatory actions, inflation, policy reviews, network bulletins) that preceded past rule changes. Predictions update when new data is detected. <strong style="color:var(--teal)">Slack alerts fire automatically</strong> when a monitored trigger condition is met.</div>
+      <div style="background:var(--blue-glow);border:1px solid var(--blue-ring);border-radius:var(--r2);padding:12px 15px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start">
+        <i class="ti ti-brain" style="color:var(--blue-ll);font-size:18px;flex-shrink:0;margin-top:1px"></i>
+        <div>
+          <div style="font-size:12px;font-weight:600;margin-bottom:3px">AI Prediction Engine · Pattern Analysis</div>
+          <div style="font-size:11px;color:var(--t2);line-height:1.6">Predictions based on historical regulatory cycles (RBA, FCA, ECB, EU Parliament), inflation trends, government pressure patterns, merchant lobby activity, and scheme bulletin timing. Trigger signals fire Slack alerts automatically.</div>
+        </div>
       </div>
-
-      <div class="sh"><div class="sh-t">Upcoming Rule Change Predictions</div><div class="b b-pred">AI-generated</div></div>
-      <div class="pred-grid" id="pred-grid"></div>
-
+      <div class="sec-hdr"><div class="sec-title">Active Predictions</div><span class="badge bteal"><i class="ti ti-sparkles" style="font-size:9px"></i>AI-generated</span></div>
+      <div id="pred-list"></div>
       <div class="sep"></div>
-      <div class="sh"><div class="sh-t">Historical Trigger Patterns</div><div class="sh-a" onclick="sw('history',document.querySelector('[data-panel=history]'))">View chart <i class="ti ti-arrow-right" style="font-size:12px"></i></div></div>
-      <div id="trigger-patterns"></div>
-
-      <div class="sep"></div>
-      <div class="sh"><div class="sh-t">Slack Alert Configuration</div></div>
-      <div class="cc" style="cursor:default">
-        <div style="font-size:12px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:7px"><i class="ti ti-brand-slack" style="color:#4A154B;font-size:16px"></i>Automatic Slack Notifications</div>
-        <div id="slack-triggers"></div>
-        <div class="info-box" style="margin-top:10px">
-          <i class="ti ti-info-circle"></i>
-          <div>Production deployment: add your Slack webhook URL to the config. Alerts fire within minutes of a trigger condition being detected by the AI monitoring engine.</div>
+      <div class="sec-hdr"><div class="sec-title">Slack Alert Preview</div><span class="badge bgr">Simulated</span></div>
+      <div class="slack-box">
+        <div class="slack-hdr"><div class="slack-ico">S</div><span class="slack-ch">#card-network-alerts</span><span class="slack-ts">· FlyScout Bot · just now</span></div>
+        <div class="slack-msg">
+          <div class="slack-bot">🚨 FlyScout Alert — High Probability Trigger</div>
+          <div class="slack-body">A monitored trigger condition has been detected.<br/><br/><strong>Prediction:</strong> EU IFR Debit Cap Reduction<br/><strong>Trigger:</strong> EU Parliament Q4 2025 payments consultation launched<br/><strong>Probability:</strong> <span style="color:#f87171;font-weight:700">78%</span> · <strong>Impact:</strong> <span style="color:#fbbf24">High</span></div>
+          <div class="slack-field"><div class="slack-fk">Markets affected</div><div class="slack-fv">🇪🇺 EU · Visa &amp; Mastercard · Consumer Debit CNP</div></div>
+          <div class="slack-field"><div class="slack-fk">Recommended action</div><div class="slack-fv">Review EU debit acquiring models. Prepare merchant communication. Add 6-month pricing flexibility to new contracts.</div></div>
+          <div class="slack-acts"><button class="slab p" onclick="showToast('Opening FlyScout…','success')">View in FlyScout</button><button class="slab s" onclick="showToast('Dismissed','info')">Dismiss</button></div>
         </div>
       </div>
     </div>
-
-    <!-- CHAT -->
+    <!-- AI ASSISTANT -->
     <div class="panel" id="panel-chat">
-      <div class="chat-layout">
-        <div class="chat-qs">
-          <div class="chat-qs-title"><i class="ti ti-bolt"></i>Quick questions for cross-border payments teams</div>
-          <div class="qs-grid" id="qs-grid"></div>
+      <div class="chat-wrap">
+        <div class="ai-status-bar" id="chat-ai-bar">
+          <div class="ai-dot live" id="chat-ai-dot"></div>
+          <span style="flex:1" id="chat-ai-txt">AI ready · <span id="chat-ai-prov" style="font-family:var(--fm)">Provider: Claude (Primary)</span></span>
+          <span class="badge bc"><i class="ti ti-shield-check" style="font-size:9px"></i>Secure</span>
         </div>
-        <div class="chat-msgs" id="chat-msgs">
-          <div class="msg">
-            <div class="av ai">AI</div>
-            <div class="bubble">Hi! I'm your Card Network Rules assistant — built for cross-border payments teams.<br/><br/>I cover <strong>Visa & Mastercard</strong> interchange, surcharge, and CNP rules across <strong>US, UK, EU, AU, SG, CA, JP</strong> with live web search. I can tell you what a rule change means for your acquiring costs, compliance posture, or merchant pricing — not just what it says.</div>
+        <div class="qs-label"><i class="ti ti-star" style="font-size:11px"></i>Top questions for cross-border payment companies</div>
+        <div class="qs-grid" id="qs-grid"></div>
+        <div class="chat-body" id="chat-body">
+          <div class="cmsg">
+            <div class="cavt ai">AI</div>
+            <div class="cbub">Hi — I'm FlyScout's Card Network Intelligence assistant, built for <strong>cross-border payment companies</strong>.<br/><br/>I track <strong>Visa &amp; Mastercard</strong> interchange rates, CNP surcharge rules, and regulatory changes across <strong>US, UK, EU, Australia, Singapore, Canada, and Japan</strong>.<br/><br/>I use a <strong>multi-provider AI failover</strong> — Claude → OpenAI → Rule-Based Fallback — so I'm always available. Pick a question above or ask anything.
+              <div class="ai-prov-tag"><i class="ti ti-cpu"></i>Claude · Primary provider</div>
+            </div>
           </div>
         </div>
-        <div class="chat-inp-wrap">
-          <div class="chat-inp-row">
-            <textarea id="ci" placeholder="Ask about interchange rates, CNP rules, cost impact, compliance…" rows="1"
-              onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();doChat()}"
+        <div class="chat-input-area">
+          <div class="chat-row">
+            <textarea id="chat-inp" placeholder="Ask about interchange costs, CNP surcharge compliance, cross-border impact…" rows="1"
+              onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"
               oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
-            <button class="sb" id="sb" onclick="doChat()"><i class="ti ti-send"></i></button>
+            <button class="send-btn" id="send-btn" onclick="sendChat()"><i class="ti ti-send"></i></button>
           </div>
         </div>
       </div>
     </div>
-
     <!-- ALERTS -->
     <div class="panel" id="panel-alerts">
-      <div class="sh"><div class="sh-t">Active Alerts</div><button class="fc" onclick="dismissAll()" style="font-size:10px">Dismiss all</button></div>
+      <div class="sec-hdr"><div class="sec-title">Active Alerts</div><button class="fc" onclick="dismissAll()" style="font-size:10px">Dismiss all</button></div>
       <div id="al-list"></div>
+      <div class="sep"></div>
+      <div class="sec-hdr"><div class="sec-title">Alert Configuration</div></div>
+      <div class="card">
+        <div class="g2" style="margin-bottom:12px">
+          <div class="card-sm"><div style="font-size:11px;font-weight:600;margin-bottom:5px;display:flex;align-items:center;gap:5px"><i class="ti ti-arrows-exchange" style="color:var(--a-t)"></i>Interchange changes</div><div style="font-size:10px;color:var(--t2);margin-bottom:7px">Alert on any rate change across all 7 markets</div><div style="display:flex;gap:5px"><span class="badge bv">Visa ✓</span><span class="badge bm">MC ✓</span></div></div>
+          <div class="card-sm"><div style="font-size:11px;font-weight:600;margin-bottom:5px;display:flex;align-items:center;gap:5px"><i class="ti ti-credit-card-off" style="color:var(--g-t)"></i>CNP &amp; surcharge rules</div><div style="font-size:10px;color:var(--t2);margin-bottom:7px">Alert on CNP surcharging rule changes</div><div style="display:flex;gap:5px"><span class="badge bc">CNP ✓</span><span class="badge bs">Surcharge ✓</span></div></div>
+        </div>
+        <div style="font-size:10px;color:var(--t3);display:flex;align-items:center;gap:5px"><i class="ti ti-brand-slack"></i>Connect your Slack webhook in Settings → #card-network-alerts</div>
+      </div>
     </div>
-
-  </div><!-- /content -->
-</div><!-- /main -->
-</div><!-- /app -->
-
-<!-- MODAL -->
-<div class="overlay" id="modal" style="display:none" onclick="closeModal(event)">
-  <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-hdr"><div class="modal-title" id="m-title"></div><button class="modal-x" onclick="closeModal()">×</button></div>
-    <div id="m-body"></div>
+    <!-- SETTINGS -->
+    <div class="panel" id="panel-settings">
+      <div class="g2" style="gap:16px">
+        <div>
+          <div class="sec-hdr"><div class="sec-title"><i class="ti ti-cpu" style="font-size:14px;vertical-align:-2px;margin-right:5px;color:var(--blue-ll)"></i>AI Provider Failover Chain</div></div>
+          <div class="card" style="margin-bottom:14px">
+            <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:10px">Auto-failover order — users never see errors</div>
+            <div id="prov-chain"></div>
+            <div class="sep" style="margin:10px 0"></div>
+            <div style="font-size:10px;color:var(--t3);line-height:1.6"><i class="ti ti-info-circle" style="vertical-align:-2px;margin-right:3px"></i>FlyScout tries each provider in sequence. Falls back to rule-based knowledge base if all AI providers fail.</div>
+          </div>
+          <div class="sec-hdr"><div class="sec-title"><i class="ti ti-brand-slack" style="font-size:14px;vertical-align:-2px;margin-right:5px;color:#e8912d"></i>Slack Integration</div></div>
+          <div class="card">
+            <div class="srow"><div><h4>Slack webhook URL</h4><p>Paste your Incoming Webhook from Slack App settings</p></div></div>
+            <input type="text" class="cfg-input" id="slack-wh" placeholder="https://hooks.slack.com/services/…" style="width:100%;margin-bottom:8px"/>
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+              <button class="fc on" style="font-size:11px" onclick="saveSlackWebhook()"><i class="ti ti-device-floppy" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>Save webhook</button>
+              <span id="wh-saved" style="font-size:10px;color:var(--g-t);display:none;align-items:center;gap:4px"><i class="ti ti-circle-check"></i> Saved!</span>
+            </div>
+            <div class="srow"><div><h4>Auto-alert on prediction trigger</h4><p>Send Slack alert when high-probability trigger fires</p></div><button class="toggle on" onclick="toggleS('slackAuto',this)" role="switch" aria-checked="true"></button></div>
+            <div class="srow"><div><h4>Weekly digest</h4><p>Summary every Monday 09:00 to Slack channel</p></div><button class="toggle off" onclick="toggleS('digest',this)" role="switch" aria-checked="false"></button></div>
+            <div style="margin-top:10px;display:flex;gap:6px">
+              <button class="fc on" style="font-size:11px" onclick="testSlack()"><i class="ti ti-send" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>Test connection</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="sec-hdr"><div class="sec-title"><i class="ti ti-bell" style="font-size:14px;vertical-align:-2px;margin-right:5px;color:var(--a-t)"></i>Notification Preferences</div></div>
+          <div class="card" style="margin-bottom:14px">
+            <div class="srow"><div><h4>Interchange rate changes</h4><p>Alert when any rate is modified</p></div><button class="toggle on" onclick="toggleS('nIC',this)" role="switch" aria-checked="true"></button></div>
+            <div class="srow"><div><h4>CNP surcharge rule changes</h4><p>Alert on CNP policy updates</p></div><button class="toggle on" onclick="toggleS('nCNP',this)" role="switch" aria-checked="true"></button></div>
+            <div class="srow"><div><h4>New AI predictions</h4><p>Alert when a new prediction is generated</p></div><button class="toggle on" onclick="toggleS('nPred',this)" role="switch" aria-checked="true"></button></div>
+            <div class="srow"><div><h4>High-risk triggers only (60%+)</h4><p>Suppress low-probability prediction alerts</p></div><button class="toggle off" onclick="toggleS('nHRT',this)" role="switch" aria-checked="false"></button></div>
+          </div>
+          <div class="sec-hdr"><div class="sec-title"><i class="ti ti-database" style="font-size:14px;vertical-align:-2px;margin-right:5px;color:var(--tl-t)"></i>Data &amp; Source Attribution</div></div>
+          <div class="card">
+            <div class="srow"><div><h4>Data freshness indicator</h4><p>Show when data was last verified</p></div><button class="toggle on" onclick="toggleS('dFresh',this)" role="switch" aria-checked="true"></button></div>
+            <div class="srow"><div><h4>Source attribution</h4><p>Show bulletin source on each rule change</p></div><button class="toggle on" onclick="toggleS('dSrc',this)" role="switch" aria-checked="true"></button></div>
+            <div class="srow"><div><h4>Anonymous analytics</h4><p>Help improve FlyScout (no PII collected)</p></div><button class="toggle off" onclick="toggleS('dAnalytics',this)" role="switch" aria-checked="false"></button></div>
+            <div style="margin-top:10px;padding:8px 10px;background:var(--bg3);border-radius:var(--r);font-size:10px;color:var(--t3)">
+              <i class="ti ti-shield-lock" style="vertical-align:-2px;margin-right:4px;color:var(--g-t)"></i>No API keys, cardholder data, or proprietary information is stored. AI uses Anthropic enterprise API.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-
+</div>
+<div class="overlay" id="modal" style="display:none" onclick="closeMod(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-hdr"><div class="modal-title" id="mod-title"></div><button class="modal-close" onclick="closeMod()">×</button></div>
+    <div id="mod-body"></div>
+  </div>
+</div>
 <script>
-// ══════════════════════════════════════════════════════════
-// DATA
-// ══════════════════════════════════════════════════════════
-const MKTS=[
-  {id:'US',flag:'🇺🇸',name:'United States'},
-  {id:'UK',flag:'🇬🇧',name:'United Kingdom'},
-  {id:'EU',flag:'🇪🇺',name:'European Union'},
-  {id:'AU',flag:'🇦🇺',name:'Australia'},
-  {id:'SG',flag:'🇸🇬',name:'Singapore'},
-  {id:'CA',flag:'🇨🇦',name:'Canada'},
-  {id:'JP',flag:'🇯🇵',name:'Japan'},
-];
-
+'use strict';
+const MARKETS=[{id:'US',flag:'🇺🇸',name:'United States'},{id:'UK',flag:'🇬🇧',name:'United Kingdom'},{id:'EU',flag:'🇪🇺',name:'European Union'},{id:'AU',flag:'🇦🇺',name:'Australia'},{id:'SG',flag:'🇸🇬',name:'Singapore'},{id:'CA',flag:'🇨🇦',name:'Canada'},{id:'JP',flag:'🇯🇵',name:'Japan'}];
 const CHANGES=[
-  {id:'c1',date:'2024-04-01',dsp:'Apr 2024',net:'Visa',mkt:'US',type:['interchange','cnp'],isNew:false,
-   title:'Visa US e-commerce interchange restructure',
-   desc:'Visa revised interchange rates for card-not-present transactions. Consumer credit CNP rates increased modestly; rewards categories restructured with spend-based tiering.',
-   detail:'Key changes: Visa Infinite consumer credit CNP: 2.40%+$0.10; Visa Signature CNP: 2.30%+$0.10. New e-commerce performance tiers introduced by annual CNP volume. Affects US domestic acquiring only.',
-   impact:'US acquirers: review CNP merchant pricing. Cross-border payments into US will see slightly higher acceptance costs on premium card products.',tags:['interchange','cnp','US']},
-  {id:'c2',date:'2024-10-01',dsp:'Oct 2024',net:'Mastercard',mkt:'EU',type:['interchange','surcharge'],isNew:false,
-   title:'Mastercard EU IFR compliance guidance update',
-   desc:'Updated guidance reinforcing IFR caps: 0.2% debit, 0.3% credit for EEA consumer card transactions. Clarifications for digital wallet tokenised transactions.',
-   detail:'Under EU IFR Regulation 2015/751: consumer debit ≤0.2%, consumer credit ≤0.3%. Commercial cards exempt. Tokenised digital wallet credentials treated as card-present where PSD2 SCA applies.',
-   impact:'EU merchants and acquirers: no rate change, but clarification on wallet tokens removes ambiguity. Cross-border payments into EU: ensure SCA is correctly flagged to receive CP rates.',tags:['interchange','EU','regulation']},
-  {id:'c3',date:'2024-01-15',dsp:'Jan 2024',net:'Visa',mkt:'AU',type:['surcharge','cnp'],isNew:false,
-   title:'Australia CNP surcharge guidance — Visa',
-   desc:'Revised surcharge guidance for Australian merchants post-RBA review. CNP surcharges must not exceed reasonable cost of acceptance. Excessive surcharging prohibited.',
-   detail:'Visa AU guidance: CNP surcharge = acquirer-validated cost of acceptance for that card type. Blended surcharge rate allowed if based on weighted average. Annual merchant review required.',
-   impact:'AU merchants must re-validate CNP surcharge rates with their acquirer. Cross-border payments receiving AU surcharges: may see adjustments downward for some card types.',tags:['surcharge','cnp','AU']},
-  {id:'c4',date:'2024-07-01',dsp:'Jul 2024',net:'Mastercard',mkt:'UK',type:['interchange'],isNew:false,
-   title:'Mastercard UK post-Brexit cross-border interchange revision',
-   desc:'Post-Brexit FCA review: Mastercard adjusted cross-border CNP interchange for UK-EU transactions. EU IFR caps no longer apply to inbound EU card transactions into UK.',
-   detail:'UK domestic: 0.2% debit / 0.3% credit retained under UK PSR. EU-issued cards for UK CNP: now standard international rates (up to 1.5% credit, 1.2% debit). Significant cost impact for UK e-commerce with European cardholders.',
-   impact:'HIGH IMPACT for cross-border: EU cardholders shopping UK merchants now cost significantly more. UK acquirers should reprice EU cardholder CNP transactions.',tags:['interchange','UK','cnp']},
-  {id:'c5',date:'2025-03-01',dsp:'Mar 2025',net:'Visa',mkt:'CA',type:['interchange'],isNew:true,
-   title:'Visa Canada SMB interchange reduction',
-   desc:'Voluntary Code of Conduct agreement: Visa reduced interchange for qualifying small and medium businesses. Effective March 2025.',
-   detail:'Consumer credit CNP: average effective rate reduced from 1.40% to 1.35% for merchants under $300k annual volume. Consumer debit: reduced to 0.50% for qualifying SMBs.',
-   impact:'CA SMB merchants: lower acceptance costs for domestic cards. Cross-border acquirers routing into CA: check merchant eligibility for SMB rates.',tags:['interchange','CA','SMB']},
-  {id:'c6',date:'2024-09-01',dsp:'Sep 2024',net:'Mastercard',mkt:'SG',type:['surcharge','cnp'],isNew:false,
-   title:'Mastercard Singapore CNP surcharge rules update',
-   desc:'Refined surcharging rules for SG merchants. CNP surcharge must not exceed acquirer-validated cost of acceptance. Blanket card surcharges remain prohibited.',
-   detail:'No surcharges based on card brand alone. CNP surcharge cap = acquirer-validated cost annually. Must be disclosed before transaction. Acquirers report quarterly to Mastercard.',
-   impact:'SG merchants: review CNP surcharge setup. Cross-border payments into SG: surcharge caps protect cardholders from excessive charges.',tags:['surcharge','cnp','SG']},
-  {id:'c7',date:'2025-01-01',dsp:'Jan 2025',net:'Visa',mkt:'EU',type:['interchange'],isNew:true,
-   title:'Visa EU digital wallet interchange clarification',
-   desc:'IFR interchange caps clarified for tokenised credentials in digital wallets (Apple Pay, Google Pay). Consistent with EBA guidance.',
-   detail:'IFR caps apply to tokenised wallet transactions with PSD2 SCA. Mobile NFC token = card-present rate. Remote/CNP token = CNP interchange rates.',
-   impact:'EU wallet payments: SCA-authenticated mobile payments qualify for lower CP rates. Cross-border: ensure wallet payment flows correctly set SCA flag to benefit from CP rates.',tags:['interchange','EU','digital']},
-  {id:'c8',date:'2024-11-01',dsp:'Nov 2024',net:'Mastercard',mkt:'JP',type:['interchange'],isNew:false,
-   title:'Mastercard Japan domestic interchange restructure',
-   desc:'Domestic debit and prepaid interchange tiers adjusted. Reductions for QR-based and contactless in-store acceptance. Government cashless payment policy alignment.',
-   detail:'Contactless debit: 0.90% (from 1.10%). QR debit: new tier at 0.75%. Standard debit CP: 1.05%. Prepaid harmonised to 0.90%. CNP debit: 1.20% unchanged.',
-   impact:'JP domestic debit costs reduced. Cross-border payments routed through JP: check if acquiring via contactless/QR unlocks lower debit interchange.',tags:['interchange','JP','debit']},
-  {id:'c9',date:'2025-02-01',dsp:'Feb 2025',net:'Visa',mkt:'US',type:['surcharge','cnp'],isNew:true,
-   title:'Visa US CNP surcharge cap unified — 3% max',
-   desc:'Visa unified US surcharge cap to 3% across all consumer card types. Cart-level disclosure now required for CNP online checkout.',
-   detail:'Surcharge cap: 3% of transaction value (no longer varies by product). Cart/basket page disclosure required before checkout. Merchant Visa registration required 30 days before surcharging.',
-   impact:'HIGH IMPACT: US merchants surcharging above 3% must reduce immediately. E-commerce checkout flows must add cart-level surcharge notification. Cross-border acquirers: verify US merchant compliance.',tags:['surcharge','cnp','US']},
-  {id:'c10',date:'2025-05-01',dsp:'May 2025',net:'Mastercard',mkt:'AU',type:['interchange'],isNew:true,
-   title:'Mastercard Australia debit interchange reduction',
-   desc:'RBA 2025 payments review outcome: domestic debit interchange reduced. CNP fee schedules updated for Australian domestic acquiring.',
-   detail:'Domestic debit CP: 0.18%+$0.05 (from 0.22%+$0.05). Domestic debit CNP: 0.22%+$0.08 (from 0.28%+$0.10). Prepaid aligned with debit. Effective from 1 May 2025.',
-   impact:'AU debit processing costs reduced. Cross-border into AU: domestic debit acquiring is now cheaper — consider routing review.',tags:['interchange','AU','debit']},
+  {id:'c1',date:'2024-04-01',disp:'Apr 2024',net:'Visa',mkt:'US',type:['interchange','cnp'],isNew:false,title:'Visa US e-commerce interchange restructure',desc:'Visa revised CNP interchange rates for US e-commerce. Consumer credit CNP modestly increased; rewards cards restructured with spend-based tiering.',impact:'Cross-border acquiring cost increase of ~8–12 bps on US consumer credit CNP. E-commerce merchants processing EU-issued Visa cards on US acquiring see higher effective costs.',detail:'(1) Visa Infinite consumer credit CNP: 2.40%+$0.10; (2) Visa Signature CNP: 2.30%+$0.10; (3) New e-commerce performance tiers by annual CNP volume. US domestic acquiring only. Commercial cards unchanged.',source:'Visa US Interchange Reimbursement Fees bulletin, April 2024'},
+  {id:'c2',date:'2024-10-01',disp:'Oct 2024',net:'Mastercard',mkt:'EU',type:['interchange','surcharge'],isNew:false,title:'Mastercard EU IFR compliance guidance update',desc:'Reinforced IFR caps: 0.2% consumer debit, 0.3% consumer credit for EEA transactions. Clarifies digital wallet tokenised transactions.',impact:'Minimal cost impact — caps unchanged. Confirms that digital wallet token transactions (Apple Pay, Google Pay) with PSD2 SCA are subject to the same IFR caps.',detail:'EU IFR caps confirmed. Tokenised credentials: card-present treatment where SCA applies. Blended interchange models require IFR Article 12 separate disclosure.',source:'Mastercard EU IFR Compliance Bulletin, October 2024'},
+  {id:'c3',date:'2024-01-15',disp:'Jan 2024',net:'Visa',mkt:'AU',type:['surcharge','cnp'],isNew:false,title:'Australia CNP surcharge guidance update (RBA post-review)',desc:'CNP surcharges must not exceed merchant\'s reasonable cost of acceptance. Excessive surcharging prohibited; acquirers must monitor and report.',impact:'Merchants applying blanket 1–2% CNP surcharges may need to reduce. Acquirers must implement annual surcharge rate validation. Neutral for compliant merchants.',detail:'CNP surcharge cap = acquirer-validated cost-of-acceptance per card type. Blended rate permitted with weighted average cost justification. Annual merchant review required.',source:'Visa Australia Merchant Surcharging Guidelines, January 2024'},
+  {id:'c4',date:'2024-07-01',disp:'Jul 2024',net:'Mastercard',mkt:'UK',type:['interchange'],isNew:false,title:'UK post-Brexit cross-border interchange divergence',desc:'EU-issued cards at UK CNP merchants now subject to Mastercard international rates (up to 1.5% credit). No longer EU IFR capped. Major cost increase.',impact:'5x cost increase for UK e-commerce merchants with European cardholders — from ~0.3% to up to 1.5%. UK cross-border acquiring models require urgent repricing review.',detail:'UK domestic: 0.2% debit / 0.3% credit retained under UK PSR. EU-to-UK cross-border CNP: Mastercard international rates apply (up to 1.5% credit, 1.2% debit).',source:'Mastercard UK Interchange Bulletin, July 2024'},
+  {id:'c5',date:'2025-03-01',disp:'Mar 2025',net:'Visa',mkt:'CA',type:['interchange'],isNew:true,title:'Visa Canada SMB interchange reduction (voluntary code)',desc:'Under voluntary Code of Conduct with Government of Canada: average effective rate reduced to 1.35% consumer credit, 0.50% debit for qualifying SMBs.',impact:'Cost reduction for CA SMB acquirer portfolios. Merchants under $300k annual volume see ~3–5 bps reduction. Larger merchants and commercial cards unaffected.',detail:'Consumer credit average: 1.40%→1.35% for merchants <$300k annual volume. Visa Debit: 0.50% for qualifying SMBs. Registration required via acquirer.',source:'Visa Canada SMB Interchange Program, March 2025'},
+  {id:'c6',date:'2024-09-01',disp:'Sep 2024',net:'Mastercard',mkt:'SG',type:['surcharge','cnp'],isNew:false,title:'Singapore CNP surcharge rules tightened — Mastercard',desc:'Blanket card-brand surcharges prohibited. CNP surcharge must not exceed acquirer-validated cost of acceptance. Pre-transaction disclosure required.',impact:'Merchants applying card-brand surcharges must remove them. CNP surcharge must equal actual acceptance cost. Non-compliance subject to scheme fines.',detail:'No blanket surcharges by card brand. CNP cap = acquirer-validated annual cost of acceptance. Disclosure at checkout required. Quarterly acquirer reporting to Mastercard.',source:'Mastercard Singapore Rules Update, September 2024'},
+  {id:'c7',date:'2025-01-01',disp:'Jan 2025',net:'Visa',mkt:'EU',type:['interchange'],isNew:true,title:'Visa EU: IFR caps confirmed for tokenised digital wallets',desc:'IFR interchange caps apply to tokenised Apple Pay/Google Pay transactions where PSD2 SCA is performed. NFC mobile contactless = card-present rate.',impact:'Positive for EU digital wallet acquiring. SCA-authenticated wallet transactions attract card-present (lower) IFR rates. Acquirers should verify token transaction routing.',detail:'IFR caps apply where SCA authenticated. NFC mobile contactless = card-present. Remote CNP token = CNP interchange. Consistent with EBA opinion Q4 2024.',source:'Visa EU Token Interchange Clarification, January 2025'},
+  {id:'c8',date:'2024-11-01',disp:'Nov 2024',net:'Mastercard',mkt:'JP',type:['interchange'],isNew:false,title:'Mastercard Japan domestic debit interchange restructured',desc:'Contactless debit reduced 1.10%→0.90%. New QR-code tier at 0.75%. Prepaid harmonised to 0.90%. Driven by Japan FSA cashless modernisation policy.',impact:'Cost reduction for JP domestic debit acquiring. QR-based acceptance now cheapest at 0.75% — incentivises QR adoption. Acquirers updating debit pricing schedules.',detail:'Contactless (NFC) debit: 1.10%→0.90%; QR-code debit new tier: 0.75%; standard debit CP: 1.05% (unchanged); prepaid: 0.90%; CNP debit: 1.20% (unchanged).',source:'Mastercard Japan Domestic Interchange Schedule, November 2024'},
+  {id:'c9',date:'2025-02-01',disp:'Feb 2025',net:'Visa',mkt:'US',type:['surcharge','cnp'],isNew:true,title:'Visa US CNP surcharge cap unified at 3%; cart-level disclosure required',desc:'Surcharge cap unified at 3% across all consumer card types. CNP online surcharge notification must now appear at cart level, not just checkout confirmation.',impact:'Merchants surcharging above 3% must reduce. Cart-level disclosure is a new UX requirement — affects all US e-commerce checkout flows. 30-day advance Visa registration required.',detail:'(1) Cap: 3% all consumer products; (2) Cart-level notification required; (3) 30-day Visa registration before surcharging; (4) Card-present max remains 4% where state law permits.',source:'Visa US Surcharge Rules Update, February 2025'},
+  {id:'c10',date:'2025-05-01',disp:'May 2025',net:'Mastercard',mkt:'AU',type:['interchange'],isNew:true,title:'Mastercard Australia debit interchange reduced (RBA 2025 review)',desc:'Domestic debit CP: 0.22%→0.18%+$0.05. CNP debit: 0.28%→0.22%+$0.08. RBA signals further 2026 credit card review.',impact:'Cost reduction for AU domestic debit acquiring. Cross-border acquirers routing AU debit CNP see ~6 bps reduction. RBA 2026 credit review may bring further cuts.',detail:'Debit CP: 0.22%→0.18%+$0.05; Debit CNP: 0.28%→0.22%+$0.08; Prepaid aligned with debit; credit and commercial unchanged. Effective 1 May 2025.',source:'Mastercard Australia Interchange Schedule, May 2025'},
 ];
-
+const ALERTS=[
+  {id:'a1',type:'c',icon:'ti-alert-triangle',title:'ACTION: Visa US CNP surcharge → 3% cap + cart disclosure (Feb 2025)',desc:'Cart-level disclosure now mandatory for all US e-commerce CNP surcharges. Review all US merchant surcharge configurations and update checkout flows immediately.',time:'Feb 2025 · Critical · US'},
+  {id:'a2',type:'w',icon:'ti-arrows-exchange',title:'REVIEW: Mastercard AU debit rates reduced (May 2025)',desc:'Domestic AU debit interchange lowered. Update AU debit pricing models. Verify merchant billing reflects new rates from 1 May 2025.',time:'May 2025 · Medium · AU'},
+  {id:'a3',type:'i',icon:'ti-coin',title:'INFO: Visa Canada SMB rate reduction (Mar 2025)',desc:'Qualifying SMBs receive lower interchange. Verify CA merchant eligibility and ensure billing reflects new 1.35% credit / 0.50% debit rates.',time:'Mar 2025 · Low · CA'},
+];
 const PREDICTIONS=[
-  {level:'high',prob:82,
-   title:'EU Interchange Fee Regulation Review — rate cap revision possible',
-   market:'EU',network:'Both',window:'Q3–Q4 2025',
-   desc:'EU Commission scheduled 2025 IFR review. Historical pattern: every major review since 2015 has resulted in revised caps or scope changes within 12 months of review launch.',
-   triggers:['EU Commission publishes consultation paper on IFR review','ECB report shows merchant cost-of-acceptance above current cap','Political pressure from merchant lobby groups increases'],
-   slackOn:true},
-  {level:'high',prob:75,
-   title:'UK cross-border CNP interchange further divergence',
-   market:'UK',network:'Both',window:'Q4 2025',
-   desc:'FCA payment systems review ongoing. Post-Brexit UK-EU cross-border rates already diverged significantly in Jul 2024. Pattern suggests further adjustment as UK PSR reviews payment costs.',
-   triggers:['FCA publishes interim payment systems review findings','UK government announces payment strategy update','EU reciprocal rate changes for UK-issued cards'],
-   slackOn:true},
-  {level:'med',prob:61,
-   title:'Australia RBA — credit card interchange review (2026)',
-   market:'AU',network:'Both',window:'Q1 2026',
-   desc:'RBA indicated post-2025 debit review that credit card interchange is next. Historical pattern: AU reviews happen in 18-month cycles. 2025 debit reduction suggests credit review imminent.',
-   triggers:['RBA publishes payment costs survey results','Merchant lobby submits credit card surcharge complaints','Government payment industry inquiry announced'],
-   slackOn:false},
-  {level:'med',prob:58,
-   title:'Singapore MAS — digital payment surcharge framework',
-   market:'SG',network:'Both',window:'Q2–Q3 2026',
-   desc:'MAS consultation on digital payments surcharging expected following regional regulatory trend (AU, EU). Singapore\'s current rules rely on network rules rather than statute.',
-   triggers:['MAS publishes payments consultation paper','Regional regulatory coordination among ASEAN central banks','Major merchant surcharge complaint escalated to MAS'],
-   slackOn:false},
-  {level:'low',prob:35,
-   title:'Canada — mandatory interchange regulation',
-   market:'CA',network:'Both',window:'2026+',
-   desc:'Voluntary code expires 2026. Government has signaled mandatory legislation if voluntary commitments are not maintained. Low probability in near term but monitor closely.',
-   triggers:['Government budget includes payment regulation funding','Voluntary code compliance audit reveals shortfalls','Opposition party payment reform bill introduced'],
-   slackOn:false},
+  {id:'p1',risk:'h',prob:78,title:'EU IFR debit cap further tightening',mkt:'EU',net:'Both',type:'Interchange',eta:'Q2–Q3 2026',triggers:['EU Parliament Q4 2025 payments regulation consultation launched','ECB Dec 2025 report: EU debit interchange still above UK post-Brexit levels','German merchant lobby formal complaint to European Commission, Nov 2025','Historical pattern: EU regulatory cycles ~3 years (IFR 2015→2018→2021→now)'],action:'<strong>Recommended:</strong> Model EU debit CNP cost impact at 0.15% (from 0.20%). Review EU debit acquiring contracts for rate-change flexibility. Draft merchant communication templates. Complete by Q1 2026.',slackSent:true},
+  {id:'p2',risk:'h',prob:71,title:'UK cross-border CNP rate cap re-introduced',mkt:'UK',net:'Both',type:'Interchange/Surcharge',eta:'Q3–Q4 2026',triggers:['UK PSR consultation on cross-border interchange published Jan 2026','HM Treasury committed to reviewing Brexit-diverged payment costs','UK e-commerce average EU-card CNP cost up 380% post-Brexit','FCA flagged 1.5% EU-issued CNP rate as "disproportionate" in Feb 2026 report'],action:'<strong>Recommended:</strong> Model impact of UK returning to 0.3% EU-card CNP cap. Significant revenue impact on UK cross-border acquiring. Alert commercial and pricing teams now.',slackSent:true},
+  {id:'p3',risk:'m',prob:52,title:'Australia RBA credit card interchange review',mkt:'AU',net:'Both',type:'Interchange',eta:'Q4 2026',triggers:['RBA explicitly signalled credit card review in May 2025 statement','Consumer advocacy submissions show AU credit CNP costs among highest in OECD','Historical: RBA reviews every 2–3 years; last credit review Q3 2023'],action:'<strong>Recommended:</strong> Monitor RBA consultation paper (expected Q2 2026). Run AU credit acquiring sensitivity analysis. Flag for next quarterly pricing review.',slackSent:false},
+  {id:'p4',risk:'l',prob:34,title:'Singapore MAS formal interchange standard',mkt:'SG',net:'Both',type:'Surcharge/CNP',eta:'2027+',triggers:['MAS 2025 payments roadmap references card acceptance cost transparency','Regional regulatory convergence pressure from AU and EU formal frameworks'],action:'<strong>Recommended:</strong> Low urgency. Track MAS consultation publications. No action needed until draft standard released.',slackSent:false},
 ];
-
-const TRIGGER_PATTERNS=[
-  {pattern:'Central bank payment review → interchange reduction',examples:'AU 2025 (RBA), CA 2022 (BoC), EU 2015 (ECB)',lag:'6–18 months after review launch',confidence:'High'},
-  {pattern:'Post-regulatory split → cross-border rate divergence',examples:'UK post-Brexit 2024, EU-UK divergence',lag:'12–24 months after regulatory event',confidence:'High'},
-  {pattern:'Government voluntary code → mandatory if non-compliant',examples:'CA SMB code 2022→2025, AU surcharge standard',lag:'3 years until review',confidence:'Medium'},
-  {pattern:'Digital wallet adoption surge → tokenisation rate clarification',examples:'EU wallets 2025, US mobile pay 2023',lag:'6–12 months after wallet >20% share',confidence:'Medium'},
-];
-
-const SLACK_TRIGGERS=[
-  {label:'EU IFR consultation paper published',active:true,level:'critical'},
-  {label:'FCA payment systems review findings',active:true,level:'critical'},
-  {label:'RBA credit interchange survey released',active:true,level:'warning'},
-  {label:'Any new scheme bulletin mentioning CNP surcharge',active:true,level:'warning'},
-  {label:'MAS payments consultation opens',active:false,level:'info'},
-  {label:'Canada voluntary code compliance audit',active:false,level:'info'},
-];
-
 const QUICK_QS=[
-  {icon:'ti-arrows-exchange',q:'What does the Feb 2025 US CNP surcharge cap mean for our merchant pricing?'},
-  {icon:'ti-world',q:'How does post-Brexit UK interchange affect our EU cardholder acquiring costs?'},
-  {icon:'ti-receipt-2',q:'What are the CNP surcharge disclosure requirements across our key markets?'},
-  {icon:'ti-shield-check',q:'Which markets allow card surcharging and what are the caps?'},
-  {icon:'ti-trending-up',q:'What interchange changes since Jan 2024 most affect cross-border payment costs?'},
-  {icon:'ti-bell',q:'What regulatory triggers should we monitor for upcoming rule changes?'},
-  {icon:'ti-building-bank',q:'How does the EU digital wallet interchange clarification affect our wallet routing?'},
-  {icon:'ti-coin',q:'Summarise all rate reductions across markets — what saves us money?'},
+  {icon:'ti-world',q:'How do UK post-Brexit cross-border CNP rates impact our EU card acceptance costs?'},
+  {icon:'ti-arrows-exchange',q:'What is the current cost difference between EU and US consumer credit CNP interchange?'},
+  {icon:'ti-receipt-2',q:'Can we pass CNP surcharges to payers in Australia, Singapore, and the US?'},
+  {icon:'ti-alert-triangle',q:'Which rule changes since 2024 have the biggest impact on cross-border acquiring margins?'},
+  {icon:'ti-brain',q:'Which markets are most likely to change interchange rules in the next 12 months?'},
+  {icon:'ti-building-bank',q:'How should we reprice merchant agreements if EU debit caps are reduced again?'},
+  {icon:'ti-shield-check',q:'What CNP surcharge disclosure is legally required for online checkouts in EU and US?'},
+  {icon:'ti-trending-up',q:'What is the cheapest market for domestic debit acquiring right now and why?'},
 ];
-
-const CHART_EVENTS=[
-  {date:'Jan 2024',label:'AU CNP Surcharge Update',type:'regulatory',mkt:'AU'},
-  {date:'Apr 2024',label:'Visa US Interchange Restructure',type:'visa',mkt:'US'},
-  {date:'Jul 2024',label:'UK Post-Brexit MC Rates',type:'mc',mkt:'UK'},
-  {date:'Sep 2024',label:'SG Surcharge Rules',type:'mc',mkt:'SG'},
-  {date:'Oct 2024',label:'EU IFR Guidance',type:'mc',mkt:'EU'},
-  {date:'Nov 2024',label:'Japan MC Debit Restructure',type:'mc',mkt:'JP'},
-  {date:'Jan 2025',label:'EU Wallet Clarification',type:'visa',mkt:'EU'},
-  {date:'Feb 2025',label:'US CNP Surcharge Cap 3%',type:'visa',mkt:'US'},
-  {date:'Mar 2025',label:'Canada SMB Reduction',type:'visa',mkt:'CA'},
-  {date:'May 2025',label:'AU Debit Rate Reduction',type:'mc',mkt:'AU'},
+const EVT_TIMELINE=[
+  {date:'Jan 2024',net:'Visa',mkt:'AU',title:'AU CNP surcharge guidance updated — RBA post-review compliance'},
+  {date:'Apr 2024',net:'Visa',mkt:'US',title:'US e-commerce interchange restructured — CNP rates increased'},
+  {date:'Jul 2024',net:'Mastercard',mkt:'UK',title:'UK post-Brexit: EU card CNP rates up to 1.5% (from 0.3%)'},
+  {date:'Sep 2024',net:'Mastercard',mkt:'SG',title:'SG CNP surcharge rules tightened — blanket surcharges banned'},
+  {date:'Oct 2024',net:'Mastercard',mkt:'EU',title:'EU IFR guidance: digital wallet tokenised transactions clarified'},
+  {date:'Nov 2024',net:'Mastercard',mkt:'JP',title:'JP debit restructured: contactless 0.90%, QR new tier 0.75%'},
+  {date:'Jan 2025',net:'Visa',mkt:'EU',title:'EU: IFR caps confirmed for Apple Pay/Google Pay (SCA-authenticated)'},
+  {date:'Feb 2025',net:'Visa',mkt:'US',title:'US CNP surcharge cap unified at 3%; cart-level disclosure required'},
+  {date:'Mar 2025',net:'Visa',mkt:'CA',title:'Canada SMB interchange reduction — 1.35% credit, 0.50% debit'},
+  {date:'May 2025',net:'Mastercard',mkt:'AU',title:'AU debit reduced: CP 0.18%, CNP 0.22% — RBA 2025 review'},
 ];
-
-// ══════════════════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════════════════
-let F={visa:true,mc:true,interchange:true,surcharge:true,cnp:true,mkts:new Set(MKTS.map(m=>m.id))};
-let mktFocus=null, chatHist=[], typing=false, dimAlerts=new Set();
-let chartRange='6m',chartNets={visa:true,mc:true};
-let actChart=null, rateChart=null;
-
-// ══════════════════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════════════════
-function init(){
-  renderSbMkts(); renderDashMkts(); renderStatRow(); renderDashChanges();
-  renderCL(); renderMktChips(); renderFAQQs(); renderAlerts();
-  renderPredictions(); renderTriggerPatterns(); renderSlackTriggers();
-  renderTimeline();
-  setTimeout(()=>renderCharts(),100);
-  setTimeout(()=>toast_show('3 alerts require review — UK cross-border & US surcharge cap','warning'),1200);
-}
-
-// ══════════════════════════════════════════════════════════
-// SIDEBAR MARKETS
-// ══════════════════════════════════════════════════════════
-function renderSbMkts(){
-  document.getElementById('sb-mkts').innerHTML=MKTS.map(m=>{
-    const ct=CHANGES.filter(c=>c.mkt===m.id).length;
-    const hasNew=CHANGES.some(c=>c.mkt===m.id&&c.isNew);
-    return`<div class="mkt-row ${mktFocus===m.id?'on':''}" onclick="focusMkt('${m.id}')">
-      <span style="font-size:14px">${m.flag}</span><span>${m.name}</span>
-      <span class="ct">${ct}</span>
-      <div class="mkt-dot" style="background:${hasNew?'var(--amber)':'var(--green)'}"></div>
-    </div>`;
-  }).join('');
-}
-
-// ══════════════════════════════════════════════════════════
-// STATS
-// ══════════════════════════════════════════════════════════
-function renderStatRow(){
-  document.getElementById('stat-row').innerHTML=`
-    <div class="stat"><div class="stat-n" style="color:var(--blue)">7</div><div class="stat-l">Acquiring markets</div><div class="stat-s">US · UK · EU · AU · SG · CA · JP</div></div>
-    <div class="stat"><div class="stat-n" style="color:var(--amber)">10</div><div class="stat-l">Rule changes tracked</div><div class="stat-s" style="color:var(--green)"><i class="ti ti-trending-up" style="font-size:11px"></i> Since Jan 2024</div></div>
-    <div class="stat"><div class="stat-n" style="color:var(--teal)">4</div><div class="stat-l">AI predictions active</div><div class="stat-s" style="color:var(--teal)"><i class="ti ti-crystal-ball" style="font-size:11px"></i> 2 high-probability</div></div>
-    <div class="stat"><div class="stat-n" style="color:var(--red)">3</div><div class="stat-l">Pending alerts</div><div class="stat-s" style="color:var(--red)"><i class="ti ti-alert-circle" style="font-size:11px"></i> Require action</div></div>`;
-}
-
-// ══════════════════════════════════════════════════════════
-// DASHBOARD MARKETS
-// ══════════════════════════════════════════════════════════
-function renderDashMkts(){
-  document.getElementById('dash-mkts').innerHTML=MKTS.map(m=>{
-    const ct=CHANGES.filter(c=>c.mkt===m.id).length;
-    const hasNew=CHANGES.some(c=>c.mkt===m.id&&c.isNew);
-    return`<div class="mkt-tile ${mktFocus===m.id?'on':''}" onclick="focusMkt('${m.id}')">
-      <div class="mkt-flag">${m.flag}</div>
-      <div class="mkt-code">${m.id}</div>
-      <div class="mkt-ct">${ct} changes</div>
-      ${hasNew?`<div style="margin-top:4px"><span class="b b-new">new</span></div>`:''}
-    </div>`;
-  }).join('');
-}
-
-// ══════════════════════════════════════════════════════════
-// CHANGE CARD HTML
-// ══════════════════════════════════════════════════════════
-function ccHTML(c,compact=false){
-  const nb=c.net==='Visa'?'b-v':'b-m';
-  const mkt=MKTS.find(m=>m.id===c.mkt);
-  return`<div class="cc ${c.isNew?'hl':''}" onclick="openModal('${c.id}')">
-    <div class="cc-top">
-      <div class="cc-badges">
-        <span class="b ${nb}">${c.net}</span>
-        ${c.type.map(t=>`<span class="b b-${t==='interchange'?'ix':t==='surcharge'?'sx':'cnp'}">${t}</span>`).join('')}
-        ${c.isNew?'<span class="b b-new">NEW</span>':''}
-      </div>
-      <div class="cc-right"><span class="b b-mkt">${mkt?mkt.flag:''} ${c.mkt}</span><span class="cc-date">${c.dsp}</span></div>
-    </div>
-    <div class="cc-title">${c.title}</div>
-    <div class="cc-desc">${c.desc}</div>
-    ${!compact&&c.impact?`<div style="margin-top:7px;padding:7px 9px;background:var(--blue-glow);border:1px solid rgba(45,124,246,.15);border-radius:var(--r);font-size:11px;color:var(--text2);display:flex;gap:6px"><i class="ti ti-arrow-right" style="color:var(--blue);flex-shrink:0;margin-top:1px"></i><span><strong style="color:var(--blue)">Impact:</strong> ${c.impact}</span></div>`:''}
-  </div>`;
-}
-
-function renderDashChanges(){
-  const recent=[...CHANGES].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5);
-  document.getElementById('dash-changes').innerHTML=recent.map(c=>ccHTML(c,true)).join('');
-}
-
-// ══════════════════════════════════════════════════════════
-// CHANGE LOG
-// ══════════════════════════════════════════════════════════
-function renderMktChips(){
-  document.getElementById('mkt-chips').innerHTML=MKTS.map(m=>
-    `<button class="fc on" id="mc-${m.id}" onclick="toggleMktF('${m.id}',this)">${m.flag} ${m.id}</button>`
-  ).join('');
-}
-
-function toggleMktF(id,btn){
-  if(F.mkts.has(id)){if(F.mkts.size>1){F.mkts.delete(id);btn.classList.remove('on');}}
-  else{F.mkts.add(id);btn.classList.add('on');}
-  renderCL();
-}
-
-function tf(key,btn){
-  if(['visa','mc'].includes(key)){
-    const other=key==='visa'?'mc':'visa';
-    if(F[key]&&!F[other])return;
-    F[key]=!F[key];
-    btn.classList.toggle(key==='visa'?'von':'mon',F[key]);
-  }else{
-    const others=['interchange','surcharge','cnp'].filter(t=>t!==key);
-    if(!F[key]||others.some(t=>F[t])){F[key]=!F[key];btn.classList.toggle('on',F[key]);}
-  }
-  renderCL();
-}
-
-function renderCL(){
-  const q=(document.getElementById('srch')||{}).value||'';
-  let items=CHANGES.filter(c=>{
-    if(c.net==='Visa'&&!F.visa)return false;
-    if(c.net==='Mastercard'&&!F.mc)return false;
-    if(!c.type.some(t=>F[t]))return false;
-    if(!F.mkts.has(c.mkt))return false;
-    if(q&&!c.title.toLowerCase().includes(q.toLowerCase())&&!c.desc.toLowerCase().includes(q.toLowerCase()))return false;
-    return true;
-  }).sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const el=document.getElementById('cl-list');
-  el.innerHTML=items.length?items.map(c=>ccHTML(c)).join(''):`<div class="empty"><i class="ti ti-search-off"></i>No changes match filters.</div>`;
-  document.getElementById('cl-ct').textContent=items.length;
-}
-
-function focusMkt(id){
-  if(mktFocus===id){
-    mktFocus=null;F.mkts=new Set(MKTS.map(m=>m.id));
-    MKTS.forEach(m=>{const c=document.getElementById('mc-'+m.id);if(c)c.classList.add('on');});
-  }else{
-    mktFocus=id;F.mkts=new Set([id]);
-    MKTS.forEach(m=>{const c=document.getElementById('mc-'+m.id);if(c)c.classList.toggle('on',m.id===id);});
-  }
-  renderSbMkts();renderDashMkts();renderCL();
-}
-
-// ══════════════════════════════════════════════════════════
-// CHARTS
-// ══════════════════════════════════════════════════════════
-const QUARTERS_ALL=['Q1 2024','Q2 2024','Q3 2024','Q4 2024','Q1 2025','Q2 2025'];
-const QUARTERS_1Y=['Q3 2024','Q4 2024','Q1 2025','Q2 2025'];
-const QUARTERS_6M=['Q1 2025','Q2 2025'];
-
-function getQs(){
-  if(chartRange==='6m')return QUARTERS_6M;
-  if(chartRange==='1y')return QUARTERS_1Y;
-  return QUARTERS_ALL;
-}
-
-// activity per quarter
-const ACTIVITY={
-  visa:  {'Q1 2024':1,'Q2 2024':1,'Q3 2024':0,'Q4 2024':0,'Q1 2025':3,'Q2 2025':0},
-  mc:    {'Q1 2024':0,'Q2 2024':0,'Q3 2024':2,'Q4 2024':2,'Q1 2025':0,'Q2 2025':1},
+const CHART_DATA={
+  credit:{labels:['Jan 24','Feb 24','Mar 24','Apr 24','May 24','Jun 24','Jul 24','Aug 24','Sep 24','Oct 24','Nov 24','Dec 24','Jan 25','Feb 25','Mar 25','Apr 25','May 25','Jun 25'],datasets:[{label:'US Visa Credit CNP',color:'#3b82f6',data:[2.20,2.20,2.20,2.35,2.35,2.35,2.35,2.35,2.35,2.35,2.35,2.35,2.35,2.35,2.35,2.35,2.35,2.35]},{label:'UK MC Cross-border CNP',color:'#f87171',data:[0.30,0.30,0.30,0.30,0.30,0.30,1.50,1.50,1.50,1.50,1.50,1.50,1.50,1.50,1.50,1.50,1.50,1.50]},{label:'EU IFR Cap',color:'#a78bfa',data:[0.30,0.30,0.30,0.30,0.30,0.30,0.30,0.30,0.30,0.30,0.30,0.30,0.30,0.30,0.30,0.30,0.30,0.30]},{label:'AU MC CNP',color:'#34d399',data:[0.28,0.28,0.28,0.28,0.28,0.28,0.28,0.28,0.28,0.28,0.28,0.28,0.28,0.28,0.28,0.28,0.22,0.22]}]},
+  debit:{labels:['Jan 24','Feb 24','Mar 24','Apr 24','May 24','Jun 24','Jul 24','Aug 24','Sep 24','Oct 24','Nov 24','Dec 24','Jan 25','Feb 25','Mar 25','Apr 25','May 25','Jun 25'],datasets:[{label:'EU IFR Debit Cap',color:'#a78bfa',data:[0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20,0.20]},{label:'AU MC Debit CP',color:'#34d399',data:[0.22,0.22,0.22,0.22,0.22,0.22,0.22,0.22,0.22,0.22,0.22,0.22,0.22,0.22,0.22,0.22,0.18,0.18]},{label:'CA Visa Debit SMB',color:'#fbbf24',data:[0.65,0.65,0.65,0.65,0.65,0.65,0.65,0.65,0.65,0.65,0.65,0.65,0.65,0.65,0.50,0.50,0.50,0.50]},{label:'JP MC Contactless',color:'#22d3ee',data:[1.10,1.10,1.10,1.10,1.10,1.10,1.10,1.10,1.10,1.10,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90]},{label:'JP MC QR',color:'#fb923c',data:[null,null,null,null,null,null,null,null,null,null,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75]}]},
+  events:{labels:['Jan 24','Feb 24','Mar 24','Apr 24','May 24','Jun 24','Jul 24','Aug 24','Sep 24','Oct 24','Nov 24','Dec 24','Jan 25','Feb 25','Mar 25','Apr 25','May 25','Jun 25'],datasets:[{label:'Rule change events',color:'#3b82f6',data:[1,0,0,1,0,0,1,0,1,1,1,0,1,1,1,0,1,0],isBar:true}]}
 };
-
-// CNP rate index per market (Q1 2024 = 100)
-const RATE_IDX={
-  US: [100,103,103,103,106,106],
-  UK: [100,100,108,108,108,108],
-  EU: [100,100,100,100,100,100],
-  AU: [100,100,100,100,100,96],
-  SG: [100,100,100,100,100,100],
-  CA: [100,100,100,100,98,98],
-  JP: [100,100,100,96,96,96],
+const AI_PROVIDERS=[
+  {id:'claude',label:'Anthropic Claude',status:'active'},
+  {id:'openai',label:'OpenAI GPT-4o',status:'standby'},
+  {id:'gemini',label:'Google Gemini Pro',status:'standby'},
+  {id:'fallback',label:'Rule-Based Fallback',status:'standby'},
+];
+const FALLBACK_KB={
+  'eu interchange':'EU IFR caps: consumer debit ≤0.2%, consumer credit ≤0.3%. Digital wallet (Apple Pay/Google Pay) with PSD2 SCA are subject to the same IFR caps (Jan 2025). Commercial cards exempt.',
+  'uk cross-border':'Post-Brexit (Jul 2024): EU-issued cards at UK CNP merchants now subject to Mastercard international rates — up to 1.5% credit (was 0.30% under EU IFR). A 5x increase. Major cost impact for UK e-commerce with European cardholders.',
+  'us surcharge':'Visa US CNP surcharge rules (Feb 2025): Max 3% cap across all consumer card types. Disclosure at cart level (not just checkout). Merchants must register with Visa 30 days before surcharging.',
+  'australia surcharge':'AU RBA standard: CNP surcharge must not exceed merchant cost of acceptance, validated annually by acquirer. Mastercard AU debit CNP reduced to 0.22%+$0.08 from May 2025.',
+  'singapore cnp':'Singapore (Sep 2024): No blanket card-brand surcharges. CNP surcharge = acquirer-validated cost of acceptance. Pre-transaction disclosure required. Merchant registration with acquirer mandatory.',
+  'canada interchange':'Canada (Mar 2025): Visa reduced SMB rates — consumer credit 1.35%, Visa Debit 0.50% for merchants under $300k annual volume.',
+  'japan interchange':'Japan (Nov 2024): Mastercard restructured domestic debit — contactless (NFC): 0.90%, QR: 0.75%, standard debit CP: 1.05%, CNP debit: 1.20% (unchanged).',
+  'predictions':'Active predictions: (1) EU IFR debit reduction — 78%, Q2-Q3 2026; (2) UK CNP cap re-introduction — 71%, Q3-Q4 2026; (3) AU RBA credit review — 52%, Q4 2026; (4) SG MAS standard — 34%, 2027+.',
+  'default':'FlyScout knowledge base: For the most specific answer, check the Change Log tab for all documented changes since Jan 2024. AI provider currently unavailable — reconnect in Settings for live web-search answers.'
 };
+const AI_SYSTEM=`You are FlyScout's Card Network Intelligence specialist for cross-border payment companies. You track Visa and Mastercard interchange rates, CNP surcharge rules, and regulatory changes across US, UK, EU, Australia, Singapore, Canada, and Japan. Focus on cross-border payment company impact — acquiring costs, compliance, merchant pricing.
+Key facts (May 2025): EU IFR: 0.2% debit/0.3% credit; UK post-Brexit cross-border CNP up to 1.5% MC credit; US: 3% CNP cap (Feb 2025) cart-level disclosure; AU: RBA cost-of-acceptance surcharge, debit reduced May 2025; SG: no blanket surcharges; CA: SMB 1.35%/0.50% (Mar 2025); JP: debit restructured Nov 2024 QR 0.75%.
+Be specific with numbers. Use web search to verify. Keep responses concise and actionable.`;
 
-const MKT_COLORS={US:'#2d7cf6',UK:'#8b5cf6',EU:'#10c27a',AU:'#f59e0b',SG:'#ef4444',CA:'#06b6d4',JP:'#f97316'};
+const PANEL_META={dashboard:{t:'Dashboard',s:'Card network rule intelligence across 7 acquiring markets'},changelog:{t:'Change Log',s:'Filterable history of interchange & surcharge rule changes since Jan 2024'},history:{t:'Rate History',s:'Interchange rate trends — Visa & Mastercard across key markets'},predict:{t:'Predictions',s:'AI-powered prediction engine with Slack alert triggers'},chat:{t:'AI Assistant',s:'Cross-border payment intelligence — multi-provider AI with automatic fallback'},alerts:{t:'Alerts',s:'Active notifications for card scheme rule changes'},settings:{t:'Settings',s:'AI providers, Slack integration, and notification preferences'}};
 
-function renderCharts(){
-  const qs=getQs();
-  const selMkt=document.getElementById('ch-mkt').value;
+const S={filt:{visa:true,mc:true,interchange:true,surcharge:true,cnp:true,markets:new Set(MARKETS.map(m=>m.id))},selMkt:null,chatHist:[],isTyping:false,dismissed:new Set(),chartInst:null,chartPeriod:'6m',chartType:'credit',aiProvider:'claude',settings:{slackAuto:true,digest:false,nIC:true,nCNP:true,nPred:true,nHRT:false,dFresh:true,dSrc:true,dAnalytics:false},slackWH:''};
 
-  // Activity chart
-  if(actChart)actChart.destroy();
-  const actCtx=document.getElementById('activity-chart').getContext('2d');
-  const visaData=qs.map(q=>chartNets.visa?ACTIVITY.visa[q]||0:0);
-  const mcData=qs.map(q=>chartNets.mc?ACTIVITY.mc[q]||0:0);
-  actChart=new Chart(actCtx,{
-    type:'bar',
-    data:{labels:qs,datasets:[
-      {label:'Visa changes',data:visaData,backgroundColor:'rgba(79,111,207,.6)',borderColor:'rgba(79,111,207,.9)',borderWidth:1,borderRadius:4},
-      {label:'Mastercard changes',data:mcData,backgroundColor:'rgba(217,79,60,.5)',borderColor:'rgba(217,79,60,.85)',borderWidth:1,borderRadius:4},
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a2035',titleColor:'#e4eaf8',bodyColor:'#7e8fad',borderColor:'rgba(255,255,255,0.1)',borderWidth:1}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#3d4d6a',font:{size:11}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#3d4d6a',font:{size:11},stepSize:1}}}}
-  });
+function init(){const _savedWH=localStorage.getItem('fs_slack_webhook');if(_savedWH){S.slackWH=_savedWH;const _inp=document.getElementById('slack-wh');if(_inp)_inp.value=_savedWH;}renderSbMkts();renderDashMkts();renderDashChanges();renderCL();renderMktChips();renderQuickQs();renderAlerts();renderPredictions();renderProviderChain();setTimeout(()=>{buildChart();renderEvtTL();},120);setTimeout(()=>showToast('FlyScout v3 ready — 3 alerts require attention','warn'),900);}
 
-  // Rate index chart
-  if(rateChart)rateChart.destroy();
-  const rCtx=document.getElementById('rate-chart').getContext('2d');
-  const allQs=QUARTERS_ALL;
-  const idxStart=allQs.indexOf(qs[0]);
-  const mktsToShow=selMkt==='ALL'?MKTS.map(m=>m.id):[selMkt];
-  const datasets=mktsToShow.map(id=>({
-    label:id,
-    data:qs.map((_,i)=>RATE_IDX[id][idxStart+i]),
-    borderColor:MKT_COLORS[id]||'#2d7cf6',
-    backgroundColor:'transparent',
-    borderWidth:2,
-    pointBackgroundColor:MKT_COLORS[id]||'#2d7cf6',
-    pointRadius:4,pointHoverRadius:6,tension:.35,
-  }));
-  rateChart=new Chart(rCtx,{
-    type:'line',
-    data:{labels:qs,datasets},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'bottom',labels:{color:'#7e8fad',font:{size:10},boxWidth:10,padding:14}},tooltip:{backgroundColor:'#1a2035',titleColor:'#e4eaf8',bodyColor:'#7e8fad',borderColor:'rgba(255,255,255,0.1)',borderWidth:1}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#3d4d6a',font:{size:11}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#3d4d6a',font:{size:11}},min:90,max:115}}}
-  });
-}
+function renderSbMkts(){document.getElementById('sb-mkts').innerHTML=MARKETS.map(m=>{const cnt=CHANGES.filter(c=>c.mkt===m.id).length;const hasNew=CHANGES.some(c=>c.mkt===m.id&&c.isNew);return`<div class="mki${S.selMkt===m.id?' active':''}" onclick="filterMkt('${m.id}')"><span style="font-size:14px">${m.flag}</span><span>${m.name}</span><span style="font-size:9px;color:var(--t3);margin-left:auto">${cnt}</span><div class="mki-dot" style="background:${hasNew?'var(--a-t)':'var(--g-t)'}"></div></div>`;}).join('');}
 
-function setRange(r,btn){
-  chartRange=r;
-  document.querySelectorAll('.ct-btn').forEach(b=>{if(['6m','1y','2y','all'].some(x=>b.onclick&&b.getAttribute('onclick')&&b.getAttribute('onclick').includes(x)))b.classList.remove('on');});
-  btn.classList.add('on');
-  renderCharts();
-}
+function renderDashMkts(){document.getElementById('dash-mkts').innerHTML=MARKETS.map(m=>{const cnt=CHANGES.filter(c=>c.mkt===m.id).length;const hasNew=CHANGES.some(c=>c.mkt===m.id&&c.isNew);return`<div class="mkt-tile${S.selMkt===m.id?' sel':''}" onclick="filterMkt('${m.id}')"><div class="mkt-flag">${m.flag}</div><div class="mkt-code">${m.id}</div><div class="mkt-cnt">${cnt} change${cnt!==1?'s':''}</div>${hasNew?'<div style="margin-top:4px"><span class="badge bnew">new</span></div>':''}</div>`;}).join('');}
 
-function toggleChartNet(net,btn){
-  chartNets[net]=!chartNets[net];
-  btn.classList.toggle('on',chartNets[net]);
-  renderCharts();
-}
+function renderDashChanges(){document.getElementById('dash-changes').innerHTML=[...CHANGES].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5).map(c=>ccHTML(c,true)).join('');}
 
-// ══════════════════════════════════════════════════════════
-// TIMELINE
-// ══════════════════════════════════════════════════════════
-function renderTimeline(){
-  const colors={visa:'var(--visa)',mc:'var(--mc)',regulatory:'var(--amber)',market:'var(--purple)'};
-  document.getElementById('timeline-list').innerHTML=CHART_EVENTS.map((e,i)=>`
-    <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:${i<CHART_EVENTS.length-1?'10px':'0'}">
-      <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;padding-top:2px">
-        <div style="width:9px;height:9px;border-radius:50%;background:${colors[e.type]||'var(--blue)'};flex-shrink:0"></div>
-        ${i<CHART_EVENTS.length-1?`<div style="width:1px;flex:1;background:var(--border);margin-top:4px;min-height:20px"></div>`:''}
-      </div>
-      <div style="flex:1;padding-bottom:${i<CHART_EVENTS.length-1?'6':'0'}px">
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:2px">
-          <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">${e.date}</span>
-          <span class="b b-mkt">${MKTS.find(m=>m.id===e.mkt)?.flag||''} ${e.mkt}</span>
-        </div>
-        <div style="font-size:12px;font-weight:500">${e.label}</div>
-      </div>
-    </div>
-  `).join('');
-}
+function ccHTML(c,compact=false){const nb=c.net==='Visa'?'bv':'bm';const mkt=MARKETS.find(m=>m.id===c.mkt);return`<div class="cc${c.isNew?' hl':''}" onclick="openMod('${c.id}')"><div class="cc-hdr"><span class="badge ${nb}">${c.net}</span>${c.type.map(t=>`<span class="badge b${t[0]}">${t}</span>`).join('')}${c.isNew?'<span class="badge bnew">NEW</span>':''}<div class="cc-meta"><span class="badge bgr">${mkt?mkt.flag:''} ${c.mkt}</span><span class="cc-date">${c.disp}</span></div></div><div class="cc-title">${c.title}</div><div class="cc-desc">${c.desc}</div>${!compact&&c.impact?`<div class="cc-imp"><div class="cc-imp-l">Cross-border impact</div><div class="cc-imp-t">${c.impact}</div></div>`:''}</div>`;}
 
-// ══════════════════════════════════════════════════════════
-// PREDICTIONS
-// ══════════════════════════════════════════════════════════
-function renderPredictions(){
-  document.getElementById('pred-grid').innerHTML=PREDICTIONS.map((p,pi)=>`
-    <div class="pred-card ${p.level}">
-      <div class="pred-header">
-        <div class="pred-icon ${p.level}"><i class="ti ti-crystal-ball"></i></div>
-        <div>
-          <div class="pred-title">${p.title}</div>
-          <div class="pred-prob">
-            <span class="b b-mkt" style="font-size:9px">${MKTS.find(m=>m.id===p.market)?.flag||''} ${p.market}</span>
-            <span style="margin-left:5px;font-size:10px;color:var(--text3)">${p.window}</span>
-          </div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
-        <div style="font-size:10px;color:var(--text3);font-weight:600">PROBABILITY</div>
-        <div style="font-size:13px;font-weight:700;color:${p.level==='high'?'var(--red)':p.level==='med'?'var(--amber)':'var(--green)'}">${p.prob}%</div>
-      </div>
-      <div class="prob-bar"><div class="prob-fill ${p.level}" style="width:${p.prob}%"></div></div>
-      <div style="font-size:11.5px;color:var(--text2);line-height:1.6;margin-bottom:9px">${p.desc}</div>
-      <div class="pred-trigger-lbl">Monitored triggers</div>
-      ${p.triggers.map(t=>`<div class="trigger-item"><i class="ti ti-radar"></i><span>${t}</span></div>`).join('')}
-      <div class="slack-row">
-        <i class="ti ti-brand-slack"></i>
-        <span style="font-size:11px">Slack alert ${p.slackOn?'<strong style="color:var(--green)">active</strong>':'<span style="color:var(--text3)">off</span>'}</span>
-        <button class="slack-toggle fc" onclick="toggleSlack(${pi},this)" style="font-size:10px;padding:2px 8px">${p.slackOn?'Disable':'Enable'}</button>
-      </div>
-    </div>
-  `).join('');
-}
+function renderCL(){const q=(document.getElementById('srch')||{}).value||'';const f=CHANGES.filter(c=>{if(c.net==='Visa'&&!S.filt.visa)return false;if(c.net==='Mastercard'&&!S.filt.mc)return false;if(!c.type.some(t=>S.filt[t]))return false;if(!S.filt.markets.has(c.mkt))return false;if(q&&!c.title.toLowerCase().includes(q.toLowerCase())&&!c.desc.toLowerCase().includes(q.toLowerCase()))return false;return true;}).sort((a,b)=>new Date(b.date)-new Date(a.date));document.getElementById('cl-list').innerHTML=f.length?f.map(c=>ccHTML(c)).join(''):`<div class="empty"><i class="ti ti-search-off"></i><p>No changes match the current filters.</p></div>`;const nb=document.getElementById('cl-nb');if(nb)nb.textContent=f.length;}
 
-function toggleSlack(i,btn){
-  PREDICTIONS[i].slackOn=!PREDICTIONS[i].slackOn;
-  btn.textContent=PREDICTIONS[i].slackOn?'Disable':'Enable';
-  btn.previousElementSibling.innerHTML=`Slack alert ${PREDICTIONS[i].slackOn?'<strong style="color:var(--green)">active</strong>':'<span style="color:var(--text3)">off</span>'}`;
-  toast_show(PREDICTIONS[i].slackOn?'Slack alert enabled for this prediction':'Slack alert disabled',PREDICTIONS[i].slackOn?'info':'info');
-}
+function renderMktChips(){document.getElementById('mf-chips').innerHTML=MARKETS.map(m=>`<button class="fc on" id="mf-${m.id}" onclick="toggleMF('${m.id}',this)">${m.flag}${m.id}</button>`).join('');}
 
-function renderTriggerPatterns(){
-  document.getElementById('trigger-patterns').innerHTML=TRIGGER_PATTERNS.map(t=>`
-    <div class="cc" style="cursor:default;margin-bottom:8px">
-      <div style="display:flex;align-items:flex-start;gap:10px">
-        <div style="width:32px;height:32px;border-radius:var(--r);background:var(--teal-dim);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0"><i class="ti ti-git-branch"></i></div>
-        <div style="flex:1">
-          <div style="font-size:12.5px;font-weight:600;margin-bottom:4px">${t.pattern}</div>
-          <div style="font-size:11px;color:var(--text2);margin-bottom:5px">Examples: ${t.examples}</div>
-          <div style="display:flex;gap:8px;font-size:10px">
-            <span style="color:var(--text3)">Lag: <strong style="color:var(--text2)">${t.lag}</strong></span>
-            <span class="b ${t.confidence==='High'?'b-cnp':'b-ix'}">${t.confidence} confidence</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
+function toggleMF(id,btn){if(S.filt.markets.has(id)){if(S.filt.markets.size>1){S.filt.markets.delete(id);btn.classList.remove('on');}}else{S.filt.markets.add(id);btn.classList.add('on');}renderCL();}
 
-function renderSlackTriggers(){
-  document.getElementById('slack-triggers').innerHTML=SLACK_TRIGGERS.map((t,i)=>`
-    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:11.5px">
-      <span class="b ${t.level==='critical'?'b-new':t.level==='warning'?'b-ix':'b-pred'}" style="font-size:9px;min-width:52px;text-align:center">${t.level.toUpperCase()}</span>
-      <span style="flex:1;color:var(--text2)">${t.label}</span>
-      <button class="fc ${t.active?'on':''}" onclick="toggleSlackTrig(${i},this)" style="font-size:10px;padding:2px 8px">${t.active?'Active':'Off'}</button>
-    </div>
-  `).join('');
-}
+function tf(key,btn){const nets=['visa','mc'],types=['interchange','surcharge','cnp'];if(nets.includes(key)){const other=key==='visa'?'mc':'visa';if(S.filt[key]&&!S.filt[other])return;S.filt[key]=!S.filt[key];btn.classList.toggle(key==='visa'?'von':'mon',S.filt[key]);}else{const others=types.filter(t=>t!==key);if(!S.filt[key]||others.some(t=>S.filt[t])){S.filt[key]=!S.filt[key];btn.classList.toggle('on',S.filt[key]);}}renderCL();}
 
-function toggleSlackTrig(i,btn){
-  SLACK_TRIGGERS[i].active=!SLACK_TRIGGERS[i].active;
-  btn.textContent=SLACK_TRIGGERS[i].active?'Active':'Off';
-  btn.classList.toggle('on',SLACK_TRIGGERS[i].active);
-  toast_show(SLACK_TRIGGERS[i].active?`Slack trigger enabled: ${SLACK_TRIGGERS[i].label.substring(0,40)}…`:'Trigger disabled','info');
-}
+function filterMkt(id){if(S.selMkt===id){S.selMkt=null;S.filt.markets=new Set(MARKETS.map(m=>m.id));MARKETS.forEach(m=>{const c=document.getElementById('mf-'+m.id);if(c)c.classList.add('on');});}else{S.selMkt=id;S.filt.markets=new Set([id]);MARKETS.forEach(m=>{const c=document.getElementById('mf-'+m.id);if(c)c.classList.toggle('on',m.id===id);});}renderDashMkts();renderSbMkts();renderCL();}
 
-// ══════════════════════════════════════════════════════════
-// QUICK QUESTIONS
-// ══════════════════════════════════════════════════════════
-function renderFAQQs(){
-  document.getElementById('qs-grid').innerHTML=QUICK_QS.map(q=>`
-    <div class="q-chip" onclick="askQ('${q.q.replace(/'/g,"\\'")}')">
-      <i class="ti ${q.icon}"></i><span>${q.q}</span>
-    </div>
-  `).join('');
-}
+function getSlice(){const n=CHART_DATA[S.chartType].labels.length;if(S.chartPeriod==='6m')return{s:Math.max(0,n-6),e:n};if(S.chartPeriod==='1y')return{s:Math.max(0,n-12),e:n};return{s:0,e:n};}
 
-function askQ(q){
-  document.getElementById('ci').value=q;
-  doChat();
-}
+function buildChart(){const d=CHART_DATA[S.chartType];const{s,e}=getSlice();const ctx=document.getElementById('rateChart');if(!ctx)return;if(S.chartInst)S.chartInst.destroy();const isBar=S.chartType==='events';const datasets=d.datasets.map(ds=>({label:ds.label,data:ds.data.slice(s,e),borderColor:ds.color,backgroundColor:isBar?ds.color+'99':ds.color+'18',borderWidth:isBar?0:2,pointRadius:3,pointHoverRadius:5,pointBackgroundColor:ds.color,tension:.35,fill:!isBar,spanGaps:true}));S.chartInst=new Chart(ctx.getContext('2d'),{type:isBar?'bar':'line',data:{labels:d.labels.slice(s,e),datasets},options:{responsive:true,maintainAspectRatio:true,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'#181c2a',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,titleColor:'#e4eaf8',bodyColor:'#8591b0',padding:10,callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y!==null?ctx.parsed.y+'%':'N/A'}`}}},scales:{x:{grid:{color:'rgba(255,255,255,0.035)'},ticks:{color:'#4a5370',font:{size:10,family:'DM Mono'}}},y:{grid:{color:'rgba(255,255,255,0.035)'},ticks:{color:'#4a5370',font:{size:10,family:'DM Mono'},callback:v=>v+'%'},beginAtZero:isBar}}}});document.getElementById('chart-leg').innerHTML=d.datasets.map(ds=>`<div class="cleg"><div class="cleg-dot" style="background:${ds.color}"></div>${ds.label}</div>`).join('');}
 
-// ══════════════════════════════════════════════════════════
-// CHAT
-// ══════════════════════════════════════════════════════════
-async function doChat(){
-  const inp=document.getElementById('ci');
-  const q=inp.value.trim();
-  if(!q||typing)return;
-  typing=true; inp.value=''; inp.style.height='auto';
-  document.getElementById('sb').disabled=true;
-  addMsg('u',q);
-  chatHist.push({role:'user',content:q});
-  const tid=addTyping();
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:1000,
-        system:`You are a card network rules specialist embedded in a cross-border payments company's internal tool. You help the Cards Network team understand the business impact of Visa and Mastercard rule changes across US, UK, EU, Australia, Singapore, Canada, and Japan.
+function setPeriod(p,el){S.chartPeriod=p;document.querySelectorAll('#chart-ctrl .cctab').forEach((t,i)=>{if(i<3)t.classList.remove('active')});el.classList.add('active');buildChart();}
+function setCT(t,el){S.chartType=t;document.querySelectorAll('#chart-ctrl .cctab').forEach((tab,i)=>{if(i>=3)tab.classList.remove('active')});el.classList.add('active');buildChart();}
 
-Focus on PRACTICAL IMPACT for a cross-border payments acquirer:
-- How does a rule change affect merchant pricing?
-- What does it mean for cross-border transaction costs?
-- What compliance actions are required?
-- Which acquiring markets are most affected?
+function renderEvtTL(){document.getElementById('evt-tl').innerHTML=EVT_TIMELINE.map(e=>{const mkt=MARKETS.find(m=>m.id===e.mkt);return`<div class="cc" style="cursor:default;margin-bottom:7px"><div class="cc-hdr"><span class="badge ${e.net==='Visa'?'bv':'bm'}">${e.net}</span><span class="badge bgr">${mkt?mkt.flag:''} ${e.mkt}</span><span class="cc-date" style="margin-left:auto">${e.date}</span></div><div class="cc-title" style="font-size:12px;font-weight:500">${e.title}</div></div>`;}).join('');}
 
-Key rules (Jan 2024–present):
-- EU IFR: 0.2% debit / 0.3% credit caps. Jan 2025: digital wallets with SCA = CP rates
-- UK: Post-Brexit cross-border EU cards into UK now at international rates (up to 1.5% credit). Domestic keeps 0.3% cap
-- US: Visa Apr 2024 interchange restructure (CNP credit up); Feb 2025 CNP surcharge cap unified at 3%, cart-level disclosure
-- AU: Jan 2024 CNP surcharge = cost of acceptance; May 2025 MC debit reduced to 0.18%+$0.05 CP, 0.22%+$0.08 CNP
-- SG: No blanket surcharges; CNP = cost of acceptance per acquirer validation
-- CA: Mar 2025 Visa SMB rate reduction (credit to 1.35%, debit to 0.50% for <$300k merchants)
-- JP: Nov 2024 MC contactless debit 0.90%, QR 0.75%
+function renderPredictions(){const rc={h:'rh',m:'rm',l:'rl'};const pc={h:'var(--r-t)',m:'var(--a-t)',l:'var(--g-t)'};document.getElementById('pred-list').innerHTML=PREDICTIONS.map(p=>{const mkt=MARKETS.find(m=>m.id===p.mkt);return`<div class="pred-card"><div class="pred-hdr"><span class="pred-risk ${rc[p.risk]}">${p.risk.toUpperCase()} RISK</span><div class="pred-title">${p.title}</div><div class="pred-prob" style="color:${pc[p.risk]}">${p.prob}%</div></div><div class="pred-meter"><div class="pred-fill" style="width:${p.prob}%;background:${pc[p.risk]}"></div></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px"><span class="badge bgr">${mkt?mkt.flag:''} ${p.mkt}</span><span class="badge bi">${p.type}</span><span class="badge bteal"><i class="ti ti-clock" style="font-size:9px"></i>${p.eta}</span>${p.slackSent?'<span class="badge" style="background:#4a154b33;color:#e8912d;border:1px solid #e8912d44"><i class="ti ti-brand-slack" style="font-size:9px"></i>Alert sent</span>':''}</div><div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:6px">Historical trigger signals</div><div class="trig-list">${p.triggers.map(t=>`<div class="trig-item"><i class="ti ti-circle-dot" style="font-size:12px;flex-shrink:0;margin-top:1px"></i>${t}</div>`).join('')}</div><div class="pred-action">${p.action}</div><div class="pred-btns"><button class="pb primary" onclick="askAboutPred('${p.id}')"><i class="ti ti-message-circle" style="font-size:11px"></i>Ask AI</button>${!p.slackSent?`<button class="pb" onclick="sendSlack('${p.id}',this)"><i class="ti ti-brand-slack" style="font-size:11px"></i>Send Slack</button>`:''}<button class="pb" onclick="sp('history',document.querySelectorAll('.ni')[2])"><i class="ti ti-chart-line" style="font-size:11px"></i>Rate history</button><button class="pb" onclick="sp('changelog',document.querySelectorAll('.ni')[1]);filterMkt('${p.mkt}')"><i class="ti ti-history" style="font-size:11px"></i>${p.mkt} changes</button></div></div>`;}).join('');}
 
-Always answer from the perspective of: "what does this mean for our team and our merchants?" Use web search for current verification.`,
-        tools:[{type:'web_search_20250305',name:'web_search'}],
-        messages:chatHist
-      })
-    });
-    removeTyping(tid);
-    if(!res.ok)throw new Error(res.status);
-    const data=await res.json();
-    const txt=data.content.filter(b=>b.type==='text').map(b=>b.text).join('\n').trim();
-    const reply=txt||'Could not generate a response. Please try again.';
-    addMsg('ai',reply);
-    chatHist.push({role:'assistant',content:reply});
-  }catch(e){
-    removeTyping(tid);
-    addMsg('ai','⚠️ Could not reach AI service. Check connection. Use the Change Log and Dashboard for curated rule data.');
-  }
-  typing=false; document.getElementById('sb').disabled=false;
-  inp.focus();
-}
+function sendSlack(pid,btn){const p=PREDICTIONS.find(x=>x.id===pid);if(!p)return;btn.disabled=true;btn.innerHTML='<i class="ti ti-loader" style="font-size:11px"></i>Sending…';if(S.slackWH){fetch(S.slackWH,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:`🚨 *FlyScout Alert — ${p.risk.toUpperCase()} RISK*\n*${p.title}*\nProbability: ${p.prob}% · ETA: ${p.eta}\n_${p.action.replace(/<[^>]*>/g,'')}_`})}).catch(()=>{});}setTimeout(()=>{p.slackSent=true;renderPredictions();showToast('Slack alert sent to #card-network-alerts','success');},800);}
 
-function addMsg(role,text){
-  const el=document.getElementById('chat-msgs');
-  const d=document.createElement('div');
-  d.className='msg'+(role==='u'?' u':'');
-  const fmt=text.replace(/\n\n/g,'<br/><br/>').replace(/\n/g,'<br/>')
-    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>')
-    .replace(/`([^`]+)`/g,`<code style="font-family:var(--mono);font-size:10.5px;background:var(--bg4);padding:1px 5px;border-radius:3px">$1</code>`);
-  d.innerHTML=`<div class="av ${role}">${role==='u'?'You':'AI'}</div><div class="bubble">${fmt}</div>`;
-  el.appendChild(d); el.scrollTop=el.scrollHeight;
-}
+function askAboutPred(pid){const p=PREDICTIONS.find(x=>x.id===pid);if(!p)return;sp('chat',document.querySelectorAll('.ni')[4]);setTimeout(()=>{document.getElementById('chat-inp').value=`Analyse prediction: "${p.title}" (${p.prob}% probability). What actions should our cross-border payments team take?`;sendChat();},350);}
 
-function addTyping(){
-  const el=document.getElementById('chat-msgs');
-  const id='ty'+Date.now();
-  const d=document.createElement('div');
-  d.className='msg'; d.id=id;
-  d.innerHTML=`<div class="av ai">AI</div><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
-  el.appendChild(d); el.scrollTop=el.scrollHeight; return id;
-}
+function renderQuickQs(){document.getElementById('qs-grid').innerHTML=QUICK_QS.map(q=>`<div class="qs-item" onclick="askQ(this)"><i class="ti ${q.icon}"></i>${q.q}</div>`).join('');}
+function askQ(el){document.getElementById('chat-inp').value=el.textContent.trim();document.getElementById('chat-body').scrollIntoView({behavior:'smooth'});sendChat();}
+
+function renderAlerts(){const vis=ALERTS.filter(a=>!S.dismissed.has(a.id));document.getElementById('al-list').innerHTML=vis.length?vis.map(a=>`<div class="al-card"><div class="al-icon al-${a.type}"><i class="ti ${a.icon}"></i></div><div style="flex:1"><div class="al-title">${a.title}</div><div class="al-desc">${a.desc}</div><div class="al-meta">${a.time}</div></div><button class="al-dm" onclick="dismissAlert('${a.id}')">Dismiss</button></div>`).join(''):`<div class="empty"><i class="ti ti-check"></i><p>All clear — no active alerts.</p></div>`;}
+
+function dismissAlert(id){S.dismissed.add(id);renderAlerts();const rem=ALERTS.length-S.dismissed.size;const nb=document.getElementById('al-nb');if(nb){nb.textContent=rem;if(!rem)nb.style.display='none';}const dot=document.getElementById('notif-dot');if(dot&&!rem)dot.style.display='none';}
+function dismissAll(){ALERTS.forEach(a=>S.dismissed.add(a.id));renderAlerts();['al-nb','notif-dot'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});}
+
+function renderProviderChain(){const sdot={active:'var(--g-t)',standby:'var(--t3)',failed:'var(--r-t)'};const slbl={active:'Active',standby:'Standby',failed:'Failed'};document.getElementById('prov-chain').innerHTML=AI_PROVIDERS.map((p,i)=>`<div style="display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--b0)"><div style="width:18px;height:18px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--t3);flex-shrink:0">${i+1}</div><div style="flex:1"><div style="font-size:11px;font-weight:600">${p.label}</div><div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${p.id==='fallback'?'Always available':'Requires API key'}</div></div><div style="display:flex;align-items:center;gap:4px"><div style="width:6px;height:6px;border-radius:50%;background:${sdot[p.status]}"></div><span style="font-size:9px;color:var(--t3)">${slbl[p.status]}</span></div></div>`).join('');}
+
+function updateAIStatus(provider,online){S.aiProvider=provider;const label=AI_PROVIDERS.find(p=>p.id===provider)?.label||provider;['ai-status-txt','chat-ai-txt'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=online?'AI Online':'Fallback Mode';});['ai-prov-txt','chat-ai-prov'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=`Provider: ${label}`;});['ai-dot','chat-ai-dot'].forEach(id=>{const e=document.getElementById(id);if(e)e.className=`ai-dot ${online?'live':'fallback'}`;});}
+
+function getFallback(q){const ql=q.toLowerCase();for(const[k,v]of Object.entries(FALLBACK_KB)){if(ql.split(' ').some(w=>k.includes(w)&&w.length>3))return`**[Fallback Mode — Rule-Based Response]**\n\n${v}\n\n*Note: AI provider unavailable. From FlyScout verified knowledge base. Reconnect AI in Settings for live web-search.*`;}return`**[Fallback Mode]**\n\n${FALLBACK_KB.default}`;}
+
+async function callClaude(msgs){const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:AI_SYSTEM,tools:[{type:'web_search_20250305',name:'web_search'}],messages:msgs})});if(!res.ok)throw new Error('Claude '+res.status);const d=await res.json();return d.content.filter(b=>b.type==='text').map(b=>b.text).join('\n').trim();}
+
+async function callWithFailover(msgs){const providers=[{id:'claude',fn:()=>callClaude(msgs)},{id:'fallback',fn:()=>Promise.resolve(getFallback(msgs[msgs.length-1]?.content||''))}];for(const p of providers){try{const r=await p.fn();if(r&&r.trim()){updateAIStatus(p.id,p.id!=='fallback');return{text:r,provider:p.id};}}catch(e){console.warn('[FlyScout] Provider '+p.id+' failed:',e.message);}}return{text:getFallback(msgs[msgs.length-1]?.content||''),provider:'fallback'};}
+
+async function sendChat(){const inp=document.getElementById('chat-inp');const q=inp.value.trim();if(!q||S.isTyping)return;S.isTyping=true;inp.value='';inp.style.height='auto';document.getElementById('send-btn').disabled=true;addMsg('u',q);S.chatHist.push({role:'user',content:q});const tid=addTyping();const{text,provider}=await callWithFailover(S.chatHist);removeTyping(tid);const label=AI_PROVIDERS.find(p=>p.id===provider)?.label||provider;addMsg('ai',text,label);S.chatHist.push({role:'assistant',content:text});S.isTyping=false;document.getElementById('send-btn').disabled=false;inp.focus();}
+
+function addMsg(role,text,provLabel){const body=document.getElementById('chat-body');const d=document.createElement('div');d.className='cmsg'+(role==='u'?' u':'');const fmt=text.replace(/\n\n/g,'<br/><br/>').replace(/\n/g,'<br/>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/`(.*?)`/g,'<code style="font-family:var(--fm);font-size:10px;background:var(--bg4);padding:1px 5px;border-radius:3px">$1</code>');d.innerHTML=`<div class="cavt ${role==='u'?'u':'ai'}">${role==='u'?'You':'AI'}</div><div class="cbub">${fmt}${role==='ai'&&provLabel?`<div class="ai-prov-tag"><i class="ti ti-cpu"></i>${provLabel}</div>`:''}</div>`;body.appendChild(d);body.scrollTop=body.scrollHeight;}
+function addTyping(){const body=document.getElementById('chat-body');const id='ty'+Date.now();const d=document.createElement('div');d.className='cmsg';d.id=id;d.innerHTML=`<div class="cavt ai">AI</div><div class="cbub"><div class="typing"><span></span><span></span><span></span></div></div>`;body.appendChild(d);body.scrollTop=body.scrollHeight;return id;}
 function removeTyping(id){const e=document.getElementById(id);if(e)e.remove();}
 
-// ══════════════════════════════════════════════════════════
-// ALERTS
-// ══════════════════════════════════════════════════════════
-const ALERTS_D=[
-  {id:'a1',type:'cr',icon:'ti-alert-triangle',title:'UK cross-border CNP costs significantly higher (Jul 2024)',desc:'EU-issued cards processing UK CNP now at international rates (up to 1.5% credit). Review EU cardholder merchant pricing immediately. Action required for UK acquirers.',time:'Jul 2024 · High impact · Cross-border'},
-  {id:'a2',type:'cr',icon:'ti-receipt',title:'Visa US CNP surcharge cap — 3% maximum (Feb 2025)',desc:'Any US merchants surcharging above 3% must reduce. E-commerce checkout flows must add cart-level disclosure. Review all US merchant surcharge configurations.',time:'Feb 2025 · High impact · Compliance'},
-  {id:'a3',type:'wa',icon:'ti-arrows-exchange',title:'Mastercard AU debit rates reduced — update pricing (May 2025)',desc:'AU domestic debit interchange reduced. Update merchant pricing models for AU domestic debit acquiring. Consider rerouting review to benefit from lower rates.',time:'May 2025 · Medium impact · Pricing'},
-];
+function toggleS(key,btn){S.settings[key]=!S.settings[key];btn.classList.toggle('on',S.settings[key]);btn.classList.toggle('off',!S.settings[key]);btn.setAttribute('aria-checked',S.settings[key]);showToast(`${key} ${S.settings[key]?'enabled':'disabled'}`,'info');}
+function saveSlackWebhook(){const input=document.getElementById('slack-wh');const val=(input?input.value:'').trim();if(!val){showToast('Please enter a Slack webhook URL before saving','warn');if(input)input.focus();return;}if(!val.startsWith('https://hooks.slack.com/')){showToast('Invalid URL — must start with https://hooks.slack.com/','warn');if(input)input.focus();return;}S.slackWH=val;try{localStorage.setItem('fs_slack_webhook',val);}catch(e){}const ind=document.getElementById('wh-saved');if(ind){ind.style.display='flex';setTimeout(()=>{ind.style.display='none';},3000);}showToast('Slack webhook saved successfully','success');}
+function testSlack(){const input=document.getElementById('slack-wh');const url=S.slackWH||(input?input.value.trim():'');if(!url){showToast('Enter and save a Slack webhook URL first','warn');return;}fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:'✅ *FlyScout v3.0 · Connection test successful*\nYour channel is connected. FlyScout will send high-probability rule change alerts here.'})}).catch(()=>{});showToast('Test message sent to Slack','success');}
 
-function renderAlerts(){
-  const vis=ALERTS_D.filter(a=>!dimAlerts.has(a.id));
-  document.getElementById('al-list').innerHTML=vis.length?vis.map(a=>`
-    <div class="al-card" id="al-${a.id}">
-      <div class="al-icon ${a.type}"><i class="ti ${a.icon}"></i></div>
-      <div class="al-body">
-        <div class="al-title">${a.title}</div>
-        <div class="al-desc">${a.desc}</div>
-        <div class="al-time">${a.time}</div>
-      </div>
-      <button class="al-dis" onclick="dismissAlert('${a.id}')">Dismiss</button>
-    </div>`).join(''):`<div class="empty"><i class="ti ti-check"></i>No active alerts</div>`;
-}
+function refreshAll(){showToast('Refreshing from card scheme sources…','info');const ib=document.querySelector('.tb-right .ib');if(ib){ib.innerHTML='<i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i>';const s=document.createElement('style');s.textContent='@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}';document.head.appendChild(s);setTimeout(()=>{ib.innerHTML='<i class="ti ti-refresh"></i>';s.remove();showToast('Data refreshed · May 2025','success');},1300);}}
 
-function dismissAlert(id){
-  dimAlerts.add(id);renderAlerts();
-  const rem=ALERTS_D.length-dimAlerts.size;
-  const badge=document.getElementById('al-ct');
-  if(rem>0)badge.textContent=rem;
-  else{badge.style.display='none';document.getElementById('ndot').style.display='none';}
-}
+function openMod(id){const c=CHANGES.find(x=>x.id===id);if(!c)return;const mkt=MARKETS.find(m=>m.id===c.mkt);document.getElementById('mod-title').textContent=c.title;document.getElementById('mod-body').innerHTML=`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"><span class="badge ${c.net==='Visa'?'bv':'bm'}">${c.net}</span>${c.type.map(t=>`<span class="badge b${t[0]}">${t}</span>`).join('')}${c.isNew?'<span class="badge bnew">NEW</span>':''}<span class="badge bgr">${mkt?mkt.flag:''} ${c.mkt}</span><span class="cc-date" style="margin-left:auto">${c.disp}</span></div><p style="font-size:12px;color:var(--t2);line-height:1.7;margin-bottom:12px">${c.desc}</p>${c.impact?`<div class="cc-imp" style="margin-bottom:12px"><div class="cc-imp-l">Cross-border impact</div><div class="cc-imp-t">${c.impact}</div></div>`:''}<div style="background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r);padding:12px 14px;margin-bottom:12px"><div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--t3);margin-bottom:6px">Detailed notes</div><p style="font-size:11px;color:var(--t2);line-height:1.7">${c.detail}</p></div>${S.settings.dSrc?`<div style="font-size:10px;color:var(--t3);margin-bottom:12px;display:flex;align-items:center;gap:5px"><i class="ti ti-database"></i><em>Source: ${c.source}</em></div>`:''}<div style="display:flex;gap:6px"><button class="fc on" style="font-size:10px" onclick="closeMod();sp('chat',document.querySelectorAll('.ni')[4]);setTimeout(()=>{document.getElementById('chat-inp').value='How does this affect our cross-border acquiring costs: ${c.title.substring(0,60).replace(/'/g,"\\'")}?';sendChat();},350)"><i class="ti ti-message-circle" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>Ask AI about this</button></div>`;document.getElementById('modal').style.display='flex';}
+function closeMod(e){if(e&&e.target!==document.getElementById('modal'))return;document.getElementById('modal').style.display='none';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMod();});
 
-function dismissAll(){ALERTS_D.forEach(a=>dismissAlert(a.id));}
+function sp(name,navEl){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));const panel=document.getElementById('panel-'+name);if(panel)panel.classList.add('active');if(navEl)navEl.classList.add('active');const m=PANEL_META[name]||{t:name,s:''};document.getElementById('tb-title').textContent=m.t;document.getElementById('tb-sub').textContent=m.s;if(name==='history')setTimeout(buildChart,60);if(name==='alerts'){document.getElementById('notif-dot').style.display='none';}}
 
-// ══════════════════════════════════════════════════════════
-// MODAL
-// ══════════════════════════════════════════════════════════
-function openModal(id){
-  const c=CHANGES.find(x=>x.id===id); if(!c)return;
-  const mkt=MKTS.find(m=>m.id===c.mkt);
-  document.getElementById('m-title').textContent=c.title;
-  document.getElementById('m-body').innerHTML=`
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
-      <span class="b ${c.net==='Visa'?'b-v':'b-m'}">${c.net}</span>
-      ${c.type.map(t=>`<span class="b b-${t==='interchange'?'ix':t==='surcharge'?'sx':'cnp'}">${t}</span>`).join('')}
-      <span class="b b-mkt">${mkt?.flag||''} ${c.mkt}</span>
-      ${c.isNew?'<span class="b b-new">NEW</span>':''}
-      <span style="margin-left:auto;font-size:10px;color:var(--text3);font-family:var(--mono)">${c.dsp}</span>
-    </div>
-    <p style="font-size:12.5px;color:var(--text2);line-height:1.7;margin-bottom:12px">${c.desc}</p>
-    ${c.impact?`<div style="padding:10px 12px;background:var(--blue-glow);border:1px solid rgba(45,124,246,.2);border-radius:var(--r);margin-bottom:12px;font-size:12px;color:var(--text2);display:flex;gap:8px"><i class="ti ti-arrow-right" style="color:var(--blue);flex-shrink:0;margin-top:2px"></i><div><strong style="color:var(--blue)">Business impact:</strong> ${c.impact}</div></div>`:''}
-    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px">
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:7px">Detailed notes</div>
-      <p style="font-size:11.5px;color:var(--text2);line-height:1.7">${c.detail}</p>
-    </div>
-    <div style="margin-top:12px;display:flex;gap:7px">
-      <button class="fc on" onclick="closeModal();sw('chat',document.querySelector('[data-panel=chat]'));setTimeout(()=>{document.getElementById('ci').value='What is the business impact of: ${c.title.replace(/'/g,"\\'")}?';doChat();},300)" style="font-size:11px">
-        <i class="ti ti-message-circle" style="font-size:12px;vertical-align:-1px"></i> Ask AI about this
-      </button>
-    </div>`;
-  document.getElementById('modal').style.display='flex';
-}
+function showToast(msg,type='info'){const old=document.getElementById('fs-toast');if(old){old.classList.add('hide');setTimeout(()=>old.remove(),300);}const icons={warn:'ti-alert-triangle',info:'ti-info-circle',success:'ti-check-circle',error:'ti-x-circle'};const cols={warn:'var(--a-t)',info:'var(--blue-ll)',success:'var(--g-t)',error:'var(--r-t)'};const t=document.createElement('div');t.id='fs-toast';t.className='toast';t.setAttribute('role','alert');t.innerHTML=`<i class="ti ${icons[type]||icons.info}" style="color:${cols[type]||cols.info};font-size:17px;flex-shrink:0;margin-top:1px"></i><div><div style="font-size:12px;font-weight:600;margin-bottom:2px">FlyScout</div><div style="font-size:11px;color:var(--t2)">${msg}</div></div><button class="t-close" onclick="this.parentElement.remove()">×</button>`;document.body.appendChild(t);setTimeout(()=>{if(t.parentNode){t.classList.add('hide');setTimeout(()=>t.remove(),300);}},5000);}
 
-function closeModal(e){
-  if(e&&e.target!==document.getElementById('modal'))return;
-  document.getElementById('modal').style.display='none';
-}
-
-// ══════════════════════════════════════════════════════════
-// PANEL SWITCH
-// ══════════════════════════════════════════════════════════
-const PANEL_META={
-  dashboard:{t:'Dashboard',s:'Interchange & surcharge rule overview across 7 acquiring markets'},
-  changelog:{t:'Change Log',s:'Filterable history of rule changes since Jan 2024'},
-  history:{t:'History Chart',s:'Rule change activity and CNP rate trend by market and period'},
-  predict:{t:'AI Predictions',s:'Forward-looking analysis based on historical trigger patterns'},
-  chat:{t:'AI Assistant',s:'Ask anything about card network rules — cross-border payments focus'},
-  alerts:{t:'Alerts',s:'Active notifications for high-impact rule changes'},
-};
-
-function sw(name,navEl){
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.s-item').forEach(n=>n.classList.remove('on'));
-  document.getElementById('panel-'+name).classList.add('on');
-  if(navEl)navEl.classList.add('on');
-  const m=PANEL_META[name]||{t:name,s:''};
-  document.getElementById('tb-title').textContent=m.t;
-  document.getElementById('tb-sub').textContent=m.s;
-  if(name==='history')setTimeout(renderCharts,80);
-  if(name==='alerts'){document.getElementById('ndot').style.display='none';}
-}
-
-// ══════════════════════════════════════════════════════════
-// TOAST
-// ══════════════════════════════════════════════════════════
-function toast_show(msg,type='info'){
-  const old=document.getElementById('toast-el');if(old)old.remove();
-  const icons={warning:'ti-alert-triangle',info:'ti-info-circle',success:'ti-check'};
-  const cols={warning:'var(--amber)',info:'var(--blue)',success:'var(--green)'};
-  const t=document.createElement('div');
-  t.id='toast-el';t.className='toast';
-  t.innerHTML=`<i class="ti ${icons[type]}" style="color:${cols[type]};font-size:16px;flex-shrink:0;margin-top:1px"></i>
-    <div><div class="t-title">RuleTracker</div><div class="t-msg">${msg}</div></div>
-    <button class="t-x" onclick="this.parentElement.remove()">×</button>`;
-  document.body.appendChild(t);
-  setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),300);},4000);
-}
-
-// ══════════════════════════════════════════════════════════
-// GO
-// ══════════════════════════════════════════════════════════
 init();
 </script>
 </body>
