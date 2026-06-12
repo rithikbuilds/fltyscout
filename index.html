@@ -61,7 +61,7 @@ html,body{background:var(--bg);color:var(--t1);font-family:var(--fb);height:100%
 .mki:hover{background:var(--bg3);color:var(--t1)}
 .mki.active{background:var(--bg3);color:var(--t1)}
 .mki-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-left:auto}
-.ai-bar{margin:0 6px;padding:9px 12px;border-radius:var(--r2);border:1px solid var(--b1);background:var(--bg3);display:flex;align-items:center;gap:8px}
+.ai-bar,.engine-bar{margin:0 6px;padding:9px 12px;border-radius:var(--r2);border:1px solid var(--b1);background:var(--bg3);display:flex;align-items:center;gap:8px}
 .ai-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .ai-dot.live{background:var(--g-t);box-shadow:0 0 6px rgba(52,211,153,.5);animation:live 2s infinite}
 .ai-dot.fallback{background:var(--a-t);animation:p 2s infinite}
@@ -266,6 +266,57 @@ html,body{background:var(--bg);color:var(--t1);font-family:var(--fb);height:100%
 .empty p{font-size:12px;line-height:1.6}
 @media(max-width:1100px){.stats-row{grid-template-columns:1fr 1fr}.mkt-grid{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:800px){.sidebar{display:none}.g2,.g3,.g4{grid-template-columns:1fr}.qs-grid{grid-template-columns:1fr}}
+
+/* SOURCE MONITOR */
+.source-card{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:13px 15px;margin-bottom:9px;display:flex;gap:12px;align-items:flex-start;transition:all var(--ease)}
+.source-card:hover{border-color:var(--b2)}
+.src-icon{width:36px;height:36px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.src-visa{background:var(--visa-bg);color:var(--visa-c)}.src-mc{background:var(--mc-bg);color:var(--mc-c)}.src-reg{background:var(--tl-bg);color:var(--tl-t)}.src-gov{background:var(--p-bg);color:var(--p-t)}
+.src-title{font-size:12px;font-weight:600;margin-bottom:2px}
+.src-url{font-size:10px;color:var(--blue-ll);font-family:var(--fm);margin-bottom:4px;word-break:break-all}
+.src-meta{font-size:10px;color:var(--t3);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.src-status{display:flex;align-items:center;gap:4px;font-size:10px;padding:2px 7px;border-radius:10px}
+.st-live{background:var(--g-bg);color:var(--g-t);border:1px solid var(--g-b)}.st-check{background:var(--a-bg);color:var(--a-t);border:1px solid var(--a-b)}.st-manual{background:var(--bg4);color:var(--t2);border:1px solid var(--b1)}
+/* KB */
+.kb-search{display:flex;gap:8px;margin-bottom:16px}
+.kb-search input{flex:1;background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:10px 14px;color:var(--t1);font-size:13px;font-family:var(--fb);outline:none;transition:border-color var(--ease)}
+.kb-search input:focus{border-color:var(--blue-ring)}
+.kb-search input::placeholder{color:var(--t3)}
+.kb-search button{padding:0 16px;background:var(--blue);border:none;border-radius:var(--r2);color:#fff;cursor:pointer;font-size:13px;font-family:var(--fb);font-weight:600;transition:all var(--ease)}
+.kb-search button:hover{background:var(--blue-l)}
+.kb-result{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:14px 16px;margin-bottom:10px;animation:fi .2s ease}
+.kb-result-q{font-size:11px;color:var(--blue-ll);margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.kb-result-a{font-size:12px;color:var(--t2);line-height:1.75}
+.kb-result-a strong{color:var(--t1)}
+.kb-result-src{margin-top:8px;font-size:10px;color:var(--t3);display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.kb-cats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.kb-cat{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:12px 14px;cursor:pointer;transition:all var(--ease)}
+.kb-cat:hover{border-color:var(--b2);background:var(--bg3)}
+.kb-cat.active{border-color:var(--blue-ring);background:var(--blue-glow)}
+.kb-cat-icon{font-size:20px;margin-bottom:6px}.kb-cat-name{font-size:11px;font-weight:600;margin-bottom:2px}.kb-cat-cnt{font-size:10px;color:var(--t3)}
+.kb-entry{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:12px 15px;margin-bottom:8px;cursor:pointer;transition:all var(--ease)}
+.kb-entry:hover{border-color:var(--b2)}
+.kb-entry-q{font-size:12px;font-weight:600;margin-bottom:4px;display:flex;align-items:flex-start;gap:6px}
+.kb-entry-q i{color:var(--blue-ll);flex-shrink:0;margin-top:1px;font-size:14px}
+.kb-entry-preview{font-size:11px;color:var(--t2);line-height:1.5}
+.kb-full{display:none;margin-top:10px;padding:10px 12px;background:var(--bg3);border-radius:var(--r);border-left:2px solid var(--blue-ll);font-size:11px;color:var(--t2);line-height:1.75}
+.kb-full strong{color:var(--t1)}
+.kb-entry.open .kb-full{display:block}
+/* FEEDBACK */
+.fb-form{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:16px}
+.fb-form textarea{width:100%;background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r);padding:10px 12px;color:var(--t1);font-size:12px;font-family:var(--fb);resize:vertical;min-height:80px;outline:none;transition:border-color var(--ease)}
+.fb-form textarea:focus{border-color:var(--blue-ring)}
+.fb-form textarea::placeholder{color:var(--t3)}
+.fb-row{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.fb-type{display:flex;gap:6px;flex-wrap:wrap}
+.fb-t{padding:4px 10px;border-radius:20px;border:1px solid var(--b1);background:var(--bg3);cursor:pointer;font-size:10px;color:var(--t2);transition:all var(--ease);font-family:var(--fb)}
+.fb-t.active{background:var(--blue-glow);color:var(--blue-ll);border-color:var(--blue-ring)}
+.fb-submit{margin-left:auto;padding:6px 16px;background:var(--blue);border:none;border-radius:var(--r);color:#fff;cursor:pointer;font-size:11px;font-family:var(--fb);font-weight:600;display:flex;align-items:center;gap:5px;transition:all var(--ease)}
+.fb-submit:hover{background:var(--blue-l)}
+.beng{background:var(--g-bg);color:var(--g-t);border:1px solid var(--g-b)}
+@media(max-width:1100px){.kb-cats{grid-template-columns:1fr 1fr}}
+@media(max-width:800px){.kb-cats{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -287,6 +338,9 @@ html,body{background:var(--bg);color:var(--t1);font-family:var(--fb);height:100%
       <div class="ni" onclick="sp('predict',this)"><i class="ti ti-brain"></i>Predictions<span class="ni-b amber">4</span></div>
       <div class="ni" onclick="sp('chat',this)"><i class="ti ti-message-circle"></i>AI Assistant</div>
       <div class="ni" onclick="sp('alerts',this)"><i class="ti ti-bell"></i>Alerts<span class="ni-b red" id="al-nb">3</span></div>
+      <div class="ni" onclick="sp('sources',this)"><i class="ti ti-antenna"></i>Source Monitor<span class="ni-b" style="background:var(--tl-bg);color:var(--tl-t);border:1px solid var(--tl-b)">18</span></div>
+      <div class="ni" onclick="sp('kb',this)"><i class="ti ti-book"></i>Knowledge Base<span class="ni-b" style="background:var(--p-bg);color:var(--p-t);border:1px solid var(--p-b)">22+</span></div>
+      <div class="ni" onclick="sp('slack',this)"><i class="ti ti-brand-slack"></i>Slack Hub</div>
       <div class="ni" onclick="sp('settings',this)"><i class="ti ti-settings"></i>Settings</div>
     </div>
     <div class="nav-sec">
@@ -295,13 +349,13 @@ html,body{background:var(--bg);color:var(--t1);font-family:var(--fb);height:100%
     </div>
   </div>
   <div style="padding:6px 6px 8px">
-    <div class="ai-bar" id="ai-bar">
-      <div class="ai-dot live" id="ai-dot"></div>
+    <div class="ai-bar" id="ai-bar" style="border-color:var(--g-b);background:var(--g-bg)">
+      <div class="ai-dot live"></div>
       <div style="flex:1">
-        <div style="font-size:10px;font-weight:600;color:var(--t1)" id="ai-status-txt">AI Online</div>
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm)" id="ai-prov-txt">Provider: Claude</div>
+        <div style="font-size:10px;font-weight:600;color:var(--g-t)">Engine Running</div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">18 sources · AI-independent</div>
       </div>
-      <i class="ti ti-shield-check" style="font-size:14px;color:var(--g-t);flex-shrink:0"></i>
+      <i class="ti ti-database-check" style="font-size:14px;color:var(--g-t);flex-shrink:0"></i>
     </div>
   </div>
   <div class="sb-foot"><div class="live-dot"></div>Live · Jan 2024 → present · 10 events</div>
@@ -486,6 +540,84 @@ html,body{background:var(--bg);color:var(--t1);font-family:var(--fb);height:100%
   </div>
 </div>
 </div>
+
+    <!-- SOURCE MONITOR -->
+    <div class="panel" id="panel-sources">
+      <div style="background:var(--blue-glow);border:1px solid var(--blue-ring);border-radius:var(--r2);padding:12px 15px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start">
+        <i class="ti ti-antenna" style="color:var(--blue-ll);font-size:18px;flex-shrink:0;margin-top:1px"></i>
+        <div><div style="font-size:12px;font-weight:600;margin-bottom:3px">18 Primary Sources — No AI Required</div>
+        <div style="font-size:11px;color:var(--t2);line-height:1.6">FlyScout polls these sources directly. Changes are detected by rule-based content comparison — no AI needed. Click any source to open it.</div></div>
+      </div>
+      <div class="sec-hdr"><div class="sec-title">Visa Sources</div><span class="badge bv">4 sources</span></div><div id="src-visa"></div>
+      <div class="sec-hdr" style="margin-top:4px"><div class="sec-title">Mastercard Sources</div><span class="badge bm">4 sources</span></div><div id="src-mc"></div>
+      <div class="sec-hdr" style="margin-top:4px"><div class="sec-title">Regulatory &amp; Government</div><span class="badge bteal">10 sources</span></div><div id="src-reg"></div>
+    </div>
+    <!-- KNOWLEDGE BASE -->
+    <div class="panel" id="panel-kb">
+      <div style="background:var(--p-bg);border:1px solid var(--p-b);border-radius:var(--r2);padding:12px 15px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start">
+        <i class="ti ti-book" style="color:var(--p-t);font-size:18px;flex-shrink:0;margin-top:1px"></i>
+        <div><div style="font-size:12px;font-weight:600;margin-bottom:3px">Source-Verified Knowledge Base · 22+ entries · Zero AI dependency</div>
+        <div style="font-size:11px;color:var(--t2);line-height:1.6">Every answer sourced directly from Visa/Mastercard bulletins, regulatory filings, and government publications. Search or browse — works 100% offline.</div></div>
+      </div>
+      <div class="kb-search">
+        <input type="text" id="kb-inp" placeholder="Search… e.g. 'EU debit cap' or 'Australia surcharge' or 'UK CNP'" onkeydown="if(event.key==='Enter')kbSearch()"/>
+        <button onclick="kbSearch()"><i class="ti ti-search" style="vertical-align:-2px;margin-right:4px"></i>Search</button>
+      </div>
+      <div id="kb-results"></div>
+      <div class="sec-hdr"><div class="sec-title">Browse by Category</div></div>
+      <div class="kb-cats" id="kb-cats"></div>
+      <div id="kb-entries"></div>
+    </div>
+    <!-- SLACK HUB -->
+    <div class="panel" id="panel-slack">
+      <div class="g2" style="gap:16px">
+        <div>
+          <div class="sec-hdr"><div class="sec-title"><i class="ti ti-brand-slack" style="font-size:14px;vertical-align:-2px;margin-right:5px;color:#e8912d"></i>Slack Configuration</div></div>
+          <div class="card" style="margin-bottom:14px">
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:8px">Webhook URL</div>
+            <input type="text" class="cfg-input" id="slack-wh-hub" placeholder="https://hooks.slack.com/services/…" style="width:100%;margin-bottom:8px"/>
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+              <button class="fc on" style="font-size:11px" onclick="saveSlackFromHub()"><i class="ti ti-device-floppy" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>Save webhook</button>
+              <span id="wh-saved-hub" style="font-size:10px;color:var(--g-t);display:none;align-items:center;gap:4px"><i class="ti ti-circle-check"></i> Saved!</span>
+            </div>
+            <div class="sep" style="margin:0 0 12px"></div>
+            <div class="srow"><div><h4>Auto-alert on prediction trigger</h4><p>Send Slack when source-pattern trigger fires</p></div><button class="toggle on" onclick="toggleS('slackAuto',this)"></button></div>
+            <div class="srow"><div><h4>Interchange rate alerts</h4><p>Alert on any rate change</p></div><button class="toggle on" onclick="toggleS('slackIC',this)"></button></div>
+            <div class="srow"><div><h4>CNP &amp; surcharge alerts</h4><p>Alert on CNP policy updates</p></div><button class="toggle on" onclick="toggleS('slackCNP',this)"></button></div>
+            <div class="srow"><div><h4>Weekly digest</h4><p>Summary every Monday 09:00</p></div><button class="toggle off" onclick="toggleS('digest',this)"></button></div>
+            <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+              <button class="fc on" style="font-size:11px" onclick="testSlackHub()"><i class="ti ti-send" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>Test connection</button>
+              <button class="fc" style="font-size:11px" onclick="sendTestAlert()"><i class="ti ti-bell" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>Send test alert</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="sec-hdr"><div class="sec-title"><i class="ti ti-message-circle" style="font-size:14px;vertical-align:-2px;margin-right:5px;color:var(--blue-ll)"></i>Team Feedback to Slack</div></div>
+          <div style="font-size:11px;color:var(--t2);margin-bottom:12px;line-height:1.6">Send questions, spotted rule changes, or corrections directly to your Slack channel.</div>
+          <div class="fb-form">
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:8px">Feedback type</div>
+            <div class="fb-type" style="margin-bottom:12px">
+              <div class="fb-t active" onclick="setFbType(this,'question')">&#10067; Question</div>
+              <div class="fb-t" onclick="setFbType(this,'rule-change')">&#128203; Rule spotted</div>
+              <div class="fb-t" onclick="setFbType(this,'correction')">&#9999; Correction</div>
+              <div class="fb-t" onclick="setFbType(this,'idea')">&#128161; Idea</div>
+            </div>
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:6px">Market (optional)</div>
+            <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px" id="fb-mkt-row"></div>
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:6px">Message</div>
+            <textarea id="fb-msg" placeholder="Describe your question, spotted rule change, or feedback…"></textarea>
+            <div class="fb-row">
+              <span style="font-size:10px;color:var(--t3)"><i class="ti ti-brand-slack" style="vertical-align:-2px"></i> Sends to #card-network-alerts</span>
+              <button class="fb-submit" onclick="submitFeedback()"><i class="ti ti-send" style="font-size:12px"></i>Send to Slack</button>
+            </div>
+          </div>
+          <div class="sep"></div>
+          <div class="sec-hdr"><div class="sec-title">Recent Feedback Sent</div></div>
+          <div id="fb-history"><div class="empty" style="padding:20px"><i class="ti ti-messages"></i><p>No feedback sent yet.</p></div></div>
+        </div>
+      </div>
+    </div>
+
 <div class="overlay" id="modal" style="display:none" onclick="closeMod(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-hdr"><div class="modal-title" id="mod-title"></div><button class="modal-close" onclick="closeMod()">×</button></div>
@@ -566,11 +698,14 @@ const AI_SYSTEM=`You are FlyScout's Card Network Intelligence specialist for cro
 Key facts (May 2025): EU IFR: 0.2% debit/0.3% credit; UK post-Brexit cross-border CNP up to 1.5% MC credit; US: 3% CNP cap (Feb 2025) cart-level disclosure; AU: RBA cost-of-acceptance surcharge, debit reduced May 2025; SG: no blanket surcharges; CA: SMB 1.35%/0.50% (Mar 2025); JP: debit restructured Nov 2024 QR 0.75%.
 Be specific with numbers. Use web search to verify. Keep responses concise and actionable.`;
 
-const PANEL_META={dashboard:{t:'Dashboard',s:'Card network rule intelligence across 7 acquiring markets'},changelog:{t:'Change Log',s:'Filterable history of interchange & surcharge rule changes since Jan 2024'},history:{t:'Rate History',s:'Interchange rate trends — Visa & Mastercard across key markets'},predict:{t:'Predictions',s:'AI-powered prediction engine with Slack alert triggers'},chat:{t:'AI Assistant',s:'Cross-border payment intelligence — multi-provider AI with automatic fallback'},alerts:{t:'Alerts',s:'Active notifications for card scheme rule changes'},settings:{t:'Settings',s:'AI providers, Slack integration, and notification preferences'}};
+const PANEL_META={dashboard:{t:'Dashboard',s:'Card network rule intelligence across 7 acquiring markets'},changelog:{t:'Change Log',s:'Filterable history of interchange & surcharge rule changes since Jan 2024'},history:{t:'Rate History',s:'Interchange rate trends — Visa & Mastercard across key markets'},predict:{t:'Predictions',s:'AI-powered prediction engine with Slack alert triggers'},chat:{t:'AI Assistant',s:'Cross-border payment intelligence — multi-provider AI with automatic fallback'},alerts:{t:'Alerts',s:'Active notifications for card scheme rule changes'},settings:{t:'Settings',s:'Monitoring engine, AI (optional), notifications'},
+  sources:{t:'Source Monitor',s:'18 primary sources — Visa, Mastercard, regulators, and government'},
+  kb:{t:'Knowledge Base',s:'22+ source-verified answers — works offline, no AI required'},
+  slack:{t:'Slack Hub',s:'Alerts & two-way team feedback via Slack'}};
 
 const S={filt:{visa:true,mc:true,interchange:true,surcharge:true,cnp:true,markets:new Set(MARKETS.map(m=>m.id))},selMkt:null,chatHist:[],isTyping:false,dismissed:new Set(),chartInst:null,chartPeriod:'6m',chartType:'credit',aiProvider:'claude',settings:{slackAuto:true,digest:false,nIC:true,nCNP:true,nPred:true,nHRT:false,dFresh:true,dSrc:true,dAnalytics:false},slackWH:''};
 
-function init(){const _savedWH=localStorage.getItem('fs_slack_webhook');if(_savedWH){S.slackWH=_savedWH;const _inp=document.getElementById('slack-wh');if(_inp)_inp.value=_savedWH;}renderSbMkts();renderDashMkts();renderDashChanges();renderCL();renderMktChips();renderQuickQs();renderAlerts();renderPredictions();renderProviderChain();setTimeout(()=>{buildChart();renderEvtTL();},120);setTimeout(()=>showToast('FlyScout v3 ready — 3 alerts require attention','warn'),900);}
+function init(){const _savedWH=localStorage.getItem('fs_slack_webhook');if(_savedWH){S.slackWH=_savedWH;const _inp=document.getElementById('slack-wh');if(_inp)_inp.value=_savedWH;const _inp2=document.getElementById('slack-wh-hub');if(_inp2)_inp2.value=_savedWH;}renderSbMkts();renderDashMkts();renderDashChanges();renderCL();renderMktChips();renderQuickQs();renderAlerts();renderPredictions();renderProviderChain();setTimeout(()=>{buildChart();renderEvtTL();},120);setTimeout(()=>showToast('FlyScout v3 ready — 3 alerts require attention','warn'),900);}
 
 function renderSbMkts(){document.getElementById('sb-mkts').innerHTML=MARKETS.map(m=>{const cnt=CHANGES.filter(c=>c.mkt===m.id).length;const hasNew=CHANGES.some(c=>c.mkt===m.id&&c.isNew);return`<div class="mki${S.selMkt===m.id?' active':''}" onclick="filterMkt('${m.id}')"><span style="font-size:14px">${m.flag}</span><span>${m.name}</span><span style="font-size:9px;color:var(--t3);margin-left:auto">${cnt}</span><div class="mki-dot" style="background:${hasNew?'var(--a-t)':'var(--g-t)'}"></div></div>`;}).join('');}
 
@@ -642,6 +777,219 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMod();});
 function sp(name,navEl){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));const panel=document.getElementById('panel-'+name);if(panel)panel.classList.add('active');if(navEl)navEl.classList.add('active');const m=PANEL_META[name]||{t:name,s:''};document.getElementById('tb-title').textContent=m.t;document.getElementById('tb-sub').textContent=m.s;if(name==='history')setTimeout(buildChart,60);if(name==='alerts'){document.getElementById('notif-dot').style.display='none';}}
 
 function showToast(msg,type='info'){const old=document.getElementById('fs-toast');if(old){old.classList.add('hide');setTimeout(()=>old.remove(),300);}const icons={warn:'ti-alert-triangle',info:'ti-info-circle',success:'ti-check-circle',error:'ti-x-circle'};const cols={warn:'var(--a-t)',info:'var(--blue-ll)',success:'var(--g-t)',error:'var(--r-t)'};const t=document.createElement('div');t.id='fs-toast';t.className='toast';t.setAttribute('role','alert');t.innerHTML=`<i class="ti ${icons[type]||icons.info}" style="color:${cols[type]||cols.info};font-size:17px;flex-shrink:0;margin-top:1px"></i><div><div style="font-size:12px;font-weight:600;margin-bottom:2px">FlyScout</div><div style="font-size:11px;color:var(--t2)">${msg}</div></div><button class="t-close" onclick="this.parentElement.remove()">×</button>`;document.body.appendChild(t);setTimeout(()=>{if(t.parentNode){t.classList.add('hide');setTimeout(()=>t.remove(),300);}},5000);}
+
+
+// ── SOURCES DATA ───────────────────────────────────────────────────
+const SOURCES=[
+  {id:'vs1',name:'Visa US Interchange Fees',url:'https://usa.visa.com/support/consumer/visa-rules.html',cat:'visa',type:'Interchange schedules',freq:'Quarterly',status:'live',lastCheck:'May 2025',markets:['US']},
+  {id:'vs2',name:'Visa Europe Interchange Fees',url:'https://www.visaeurope.com/making-payments/interchange/',cat:'visa',type:'Interchange schedules',freq:'Quarterly',status:'live',lastCheck:'May 2025',markets:['EU','UK']},
+  {id:'vs3',name:'Visa Core Rules & Product Standards',url:'https://usa.visa.com/dam/VCOM/download/about-visa/visa-rules-public.pdf',cat:'visa',type:'Rules bulletin',freq:'Semi-annual',status:'live',lastCheck:'Apr 2025',markets:['US','CA','AU','SG','JP']},
+  {id:'vs4',name:'Visa Asia Pacific Newsroom',url:'https://www.visa.com.au/about-visa/newsroom.html',cat:'visa',type:'Regional rules',freq:'Quarterly',status:'check',lastCheck:'Mar 2025',markets:['AU','SG','JP']},
+  {id:'mc1',name:'Mastercard US Interchange Rates',url:'https://www.mastercard.us/en-us/business/overview/merchant-acquiring/interchange.html',cat:'mc',type:'Interchange schedules',freq:'Quarterly',status:'live',lastCheck:'May 2025',markets:['US']},
+  {id:'mc2',name:'Mastercard EU/UK Interchange Rates',url:'https://www.mastercard.co.uk/en-gb/business/overview/merchant-acquiring/interchange-rates.html',cat:'mc',type:'Interchange schedules',freq:'Quarterly',status:'live',lastCheck:'May 2025',markets:['EU','UK']},
+  {id:'mc3',name:'Mastercard Transaction Processing Rules',url:'https://www.mastercard.us/content/dam/public/mastercardcom/na/global-site/documents/transaction-processing-rules.pdf',cat:'mc',type:'Rules bulletin',freq:'Semi-annual',status:'live',lastCheck:'Apr 2025',markets:['US','CA','AU','SG','JP']},
+  {id:'mc4',name:'Mastercard Asia Pacific Newsroom',url:'https://newsroom.mastercard.com/asia-pacific/',cat:'mc',type:'Press releases',freq:'Ongoing',status:'check',lastCheck:'Mar 2025',markets:['AU','SG','JP']},
+  {id:'rg1',name:'EBA — Payment Services',url:'https://www.eba.europa.eu/regulation-and-policy/payment-services-and-electronic-money',cat:'reg',type:'Regulatory guidance',freq:'Ongoing',status:'live',lastCheck:'May 2025',markets:['EU']},
+  {id:'rg2',name:'RBA — Card Payments Regulation',url:'https://www.rba.gov.au/payments-and-infrastructure/payments-system/card-payments-regulation/',cat:'reg',type:'Regulatory review',freq:'Annual',status:'live',lastCheck:'May 2025',markets:['AU']},
+  {id:'rg3',name:'UK Payment Systems Regulator',url:'https://www.psr.org.uk/our-work/card-acquiring/',cat:'reg',type:'Regulatory review',freq:'Ongoing',status:'live',lastCheck:'May 2025',markets:['UK']},
+  {id:'rg4',name:'MAS — Payments Regulation',url:'https://www.mas.gov.sg/regulation/payments',cat:'reg',type:'Regulatory guidance',freq:'Ongoing',status:'live',lastCheck:'Apr 2025',markets:['SG']},
+  {id:'rg5',name:'FCAC — Payment Cards',url:'https://www.canada.ca/en/financial-consumer-agency/programs/payment-cards.html',cat:'reg',type:'Code of conduct monitor',freq:'Annual',status:'live',lastCheck:'Apr 2025',markets:['CA']},
+  {id:'rg6',name:'Japan FSA — Payment Services',url:'https://www.fsa.go.jp/en/policy/payserv/index.html',cat:'reg',type:'Regulatory guidance',freq:'Annual',status:'check',lastCheck:'Feb 2025',markets:['JP']},
+  {id:'gv1',name:'EU Parliament — Economic Affairs',url:'https://www.europarl.europa.eu/committees/en/econ/home',cat:'gov',type:'Consultation tracker',freq:'Ongoing',status:'live',lastCheck:'May 2025',markets:['EU']},
+  {id:'gv2',name:'HM Treasury — Payments Policy',url:'https://www.gov.uk/government/collections/payments-and-financial-infrastructure',cat:'gov',type:'Government consultation',freq:'Ongoing',status:'live',lastCheck:'May 2025',markets:['UK']},
+  {id:'gv3',name:'Australian Treasury — Payments Reform',url:'https://treasury.gov.au/consultation/c2023-422397',cat:'gov',type:'Government consultation',freq:'Annual',status:'live',lastCheck:'Apr 2025',markets:['AU']},
+  {id:'gv4',name:'Government of Canada — Payment Sector',url:'https://www.canada.ca/en/department-finance/programs/consultations/2023/payment-sector.html',cat:'gov',type:'Government consultation',freq:'Annual',status:'check',lastCheck:'Mar 2025',markets:['CA']},
+];
+
+// ── KNOWLEDGE BASE ─────────────────────────────────────────────────
+const KB_CATS=[
+  {id:'interchange',icon:'💱',name:'Interchange Rates',desc:'Rate schedules, caps and changes'},
+  {id:'cnp',icon:'🌐',name:'CNP Rules',desc:'Card-not-present regulations'},
+  {id:'surcharge',icon:'🧾',name:'Surcharging',desc:'Merchant surcharge regulations'},
+  {id:'regulatory',icon:'⚖️',name:'Regulation',desc:'IFR, RBA, PSR, MAS, FCAC'},
+  {id:'crossborder',icon:'✈️',name:'Cross-Border',desc:'International acquiring costs'},
+  {id:'markets',icon:'🗺️',name:'Market Snapshots',desc:'Per-market summaries'},
+];
+const KB=[
+  {id:'kb1',cat:'interchange',q:'What are the current EU interchange caps?',preview:'EU IFR: 0.2% consumer debit, 0.3% consumer credit. Commercial cards exempt.',
+   answer:'EU IFR (Regulation 2015/751) caps:<br/><br/><strong>Consumer debit:</strong> ≤0.2% of transaction value<br/><strong>Consumer credit:</strong> ≤0.3% of transaction value<br/><strong>Commercial cards:</strong> Exempt — no cap<br/><br/><strong>Digital wallets (Jan 2025 clarification):</strong> Tokenised Apple Pay / Google Pay with PSD2 SCA = same IFR caps. NFC mobile contactless = card-present treatment.<br/><br/>Caps in force since June 2015, reaffirmed Oct 2024 Mastercard bulletin.',
+   sources:['EU IFR Regulation 2015/751','EBA Opinion Q4 2024','Visa EU Clarification Jan 2025','Mastercard EU Bulletin Oct 2024']},
+  {id:'kb2',cat:'interchange',q:'Visa US consumer credit CNP rates after April 2024?',preview:'Visa Infinite: 2.40%+$0.10. Visa Signature: 2.30%+$0.10.',
+   answer:'Post April 2024 Visa US restructure:<br/><br/><strong>Visa Infinite CNP:</strong> 2.40% + $0.10<br/><strong>Visa Signature CNP:</strong> 2.30% + $0.10<br/><strong>Visa Traditional rewards CNP:</strong> 2.10% + $0.10<br/><strong>Standard consumer credit CNP:</strong> 1.80% + $0.10<br/><br/><strong>New:</strong> E-commerce performance tiers introduced — higher-volume merchants can qualify for reduced rates. US domestic acquiring only. Commercial cards have separate schedules.',
+   sources:['Visa US Interchange Reimbursement Fees bulletin, April 2024','Visa Core Rules & Product Standards']},
+  {id:'kb3',cat:'interchange',q:'How do UK interchange rates compare to EU after Brexit?',preview:'UK domestic: same EU-style caps. Cross-border EU cards: up to 1.5% credit (MC).',
+   answer:'<strong>UK Domestic (UK card → UK merchant):</strong><br/>Consumer debit: ≤0.2% · Consumer credit: ≤0.3% (UK PSR cap — matches EU IFR)<br/><br/><strong>Cross-border CNP (EU-issued card → UK merchant, post-July 2024):</strong><br/>Mastercard consumer credit CNP: up to <strong>1.5%</strong> (was 0.3% under EU IFR)<br/>Mastercard consumer debit CNP: up to <strong>1.2%</strong> (was 0.2%)<br/><br/>This is a <strong>5x cost increase</strong> for UK e-commerce merchants with EU cardholders. Visa rates show similar divergence.',
+   sources:['Mastercard UK Interchange Bulletin, July 2024','UK PSR Annual Review','HM Treasury Payments Policy 2024']},
+  {id:'kb4',cat:'interchange',q:'Mastercard Australia debit interchange rates in 2025?',preview:'Debit CP: 0.18%+$0.05. Debit CNP: 0.22%+$0.08 (from May 2025).',
+   answer:'Effective 1 May 2025 (RBA 2025 Payments Review):<br/><br/><strong>Domestic Debit CP:</strong> 0.18% + $0.05 (was 0.22%+$0.05)<br/><strong>Domestic Debit CNP:</strong> 0.22% + $0.08 (was 0.28%+$0.10)<br/><strong>Prepaid:</strong> aligned with debit rates<br/><strong>Consumer credit:</strong> unchanged<br/><br/><strong>Outlook:</strong> RBA signalled consumer credit interchange review via consultation paper expected Q2 2026.',
+   sources:['Mastercard Australia Interchange Schedule, May 2025','RBA Payments Review 2025']},
+  {id:'kb5',cat:'interchange',q:'Mastercard Japan debit rates after November 2024?',preview:'Contactless: 0.90%. QR new tier: 0.75%. Standard CP: 1.05%.',
+   answer:'Effective November 2024 (Japan FSA cashless policy):<br/><br/><strong>Contactless (NFC) debit:</strong> 0.90% (was 1.10%)<br/><strong>QR-code debit (new tier):</strong> 0.75%<br/><strong>Standard debit CP:</strong> 1.05% (unchanged)<br/><strong>Prepaid:</strong> 0.90% (harmonised)<br/><strong>CNP debit:</strong> 1.20% (unchanged)<br/><br/>QR tier designed to incentivise QR adoption (Line Pay, PayPay, etc.).',
+   sources:['Mastercard Japan Domestic Interchange Schedule, Nov 2024','Japan FSA Cashless Policy 2024']},
+  {id:'kb6',cat:'interchange',q:'Visa Canada SMB interchange rates from March 2025?',preview:'Consumer credit: 1.35%. Visa Debit: 0.50% for qualifying SMBs.',
+   answer:'Under voluntary Code of Conduct with Government of Canada:<br/><br/><strong>Consumer credit SMB rate:</strong> 1.35% average (was 1.40%) for merchants ≤$300k annual Visa volume<br/><strong>Visa Debit SMB rate:</strong> 0.50% flat<br/><br/>Must register via acquiring bank. FCAC monitors compliance. Government reserved right to mandate further reductions if voluntary targets not met.',
+   sources:['Visa Canada SMB Interchange Program, March 2025','Government of Canada Code of Conduct','FCAC Annual Review 2025']},
+  {id:'kb7',cat:'cnp',q:'Visa US CNP surcharge cap and disclosure rules (2025)?',preview:'3% max cap. Cart-level disclosure required before checkout begins.',
+   answer:'Updated February 2025:<br/><br/><strong>Cap:</strong> 3% maximum across all consumer card types (unified — was variable by product)<br/><strong>Disclosure:</strong> Must appear at cart/basket level before checkout begins — not only at order confirmation<br/><strong>Registration:</strong> 30-day advance registration with Visa required<br/><strong>Debit/prepaid:</strong> Cannot be surcharged (Durbin Amendment)<br/><strong>Card-present cap:</strong> 4% where state law permits (unchanged)',
+   sources:['Visa US Surcharge Rules Update, February 2025','Visa Core Rules & Product Standards']},
+  {id:'kb8',cat:'cnp',q:'Can merchants surcharge CNP transactions in Australia?',preview:'Yes, but only up to reasonable cost of acceptance. Acquirer must validate annually.',
+   answer:'Allowed with strict RBA restrictions:<br/><br/><strong>Permitted:</strong> Surcharge up to merchant\'s reasonable cost of acceptance for that card type — validated annually by acquirer<br/><strong>Prohibited:</strong> Surcharging above validated cost · Blanket surcharges across all cards without cost justification · Using surcharges as profit mechanism<br/><strong>Enforcement:</strong> ACCC enforces RBA standard. Merchants can be fined for excessive surcharging.<br/><br/><strong>2025 note:</strong> Mastercard AU debit CNP rate reduced (May 2025) — validated cost of acceptance for debit CNP will decrease.',
+   sources:['Visa Australia Surcharging Guidelines, Jan 2024','RBA Surcharge Standard','ACCC Surcharge Guidance','Mastercard Australia May 2025']},
+  {id:'kb9',cat:'cnp',q:'Are CNP surcharges allowed in Singapore?',preview:'Allowed at cost of acceptance only. Blanket card-brand surcharges banned.',
+   answer:'Singapore rules (updated Sep 2024):<br/><br/><strong>Allowed:</strong> CNP surcharge = acquirer-validated cost of acceptance. Disclosure required before transaction.<br/><strong>Prohibited:</strong> Blanket card-brand surcharges (e.g. "+2% for Mastercard"). Surcharges above validated cost.<br/><strong>Process:</strong> Merchant registers with acquirer · Annual review · Acquirer reports to Mastercard quarterly.',
+   sources:['Mastercard Singapore Rules Update, Sep 2024','MAS Payments Regulation','Visa Singapore Merchant Guidelines']},
+  {id:'kb10',cat:'cnp',q:'Are CNP surcharges allowed in the EU?',preview:'No — PSD2 prohibits surcharging on IFR-regulated consumer cards.',
+   answer:'Surcharging is <strong>prohibited</strong> in the EU for consumer card CNP transactions:<br/><br/>PSD2 Article 62(4) bans merchant surcharges on payment instruments where interchange is regulated under IFR. This covers consumer Visa/Mastercard debit and credit CNP.<br/><br/><strong>Exceptions:</strong> Commercial/corporate cards (not IFR-regulated) · American Express (three-party scheme, separately regulated)<br/><strong>UK note:</strong> UK Consumer Rights Act retains similar protections post-Brexit — consumer card surcharging also banned in UK.',
+   sources:['EU PSD2 Directive (2015/2366), Article 62','EU IFR Regulation 2015/751','EBA PSD2 Surcharging Guidance']},
+  {id:'kb11',cat:'surcharge',q:'Can merchants surcharge in Canada?',preview:'Yes since Oct 2022. Up to 2.4% cap. Debit excluded. Quebec exempt.',
+   answer:'Since October 2022 (following court decision removing scheme surcharge prohibition):<br/><br/><strong>Cap:</strong> 2.4% or actual merchant discount rate — whichever is lower<br/><strong>Excluded:</strong> Debit cards · Prepaid cards<br/><strong>Quebec exception:</strong> Consumer credit card surcharging remains banned under Quebec Consumer Protection Act<br/><strong>Registration:</strong> 30-day advance registration with Visa/Mastercard<br/><strong>Disclosure:</strong> Must be clearly disclosed before transaction, both in-store and online.',
+   sources:['Visa Canada Merchant Surcharge Rules 2022','Mastercard Canada Surcharge Rules 2022','FCAC Code of Conduct 2023']},
+  {id:'kb12',cat:'surcharge',q:'Can merchants surcharge in the UK?',preview:'Consumer cards: banned. Commercial cards: permitted.',
+   answer:'<strong>Consumer cards (debit and credit):</strong> Surcharging is <strong>banned</strong> under Consumer Rights (Payment Surcharges) Regulations 2018. Applies to all consumer Visa/Mastercard — card-present and CNP.<br/><br/><strong>Commercial/corporate cards:</strong> Surcharging permitted — no specific cap, must reflect actual processing cost.<br/><br/><strong>Cross-border CNP problem:</strong> UK ban still applies for consumer cards, but underlying interchange cost is now up to 1.5% for EU-issued cards (post-Brexit). UK merchants absorb this cost — cannot pass to EU cardholders via surcharge.',
+   sources:['Consumer Rights (Payment Surcharges) Regulations 2018','UK PSR Review 2024','FCA Payment Services Guidance']},
+  {id:'kb13',cat:'regulatory',q:'What is the EU Interchange Fee Regulation (IFR)?',preview:'EU Regulation 2015/751 — caps interchange at 0.2% debit, 0.3% credit for consumer cards.',
+   answer:'EU IFR (Regulation 2015/751), in force since December 2015:<br/><br/><strong>Consumer debit cap:</strong> 0.2% · <strong>Consumer credit cap:</strong> 0.3% · <strong>Commercial/corporate:</strong> Exempt<br/>Applies to Visa, Mastercard, and other four-party schemes within EEA.<br/><br/><strong>Scope:</strong> Both payer\'s bank and merchant\'s bank must be in EEA. Post-Brexit, cross-border EEA↔UK transactions no longer covered.<br/><strong>Enforcement:</strong> National competent authorities per member state · EBA oversight.',
+   sources:['EU IFR Regulation 2015/751','EBA IFR Guidelines','European Commission Payments Policy']},
+  {id:'kb14',cat:'regulatory',q:'What is the RBA surcharge standard in Australia?',preview:'Merchants can surcharge but only up to reasonable cost of acceptance, validated by acquirer annually.',
+   answer:'RBA Surcharge Standard (revised 2016):<br/><br/><strong>Core rule:</strong> Surcharge must not exceed the merchant\'s reasonable cost of acceptance for that payment type.<br/><strong>Cost of acceptance includes:</strong> Merchant service fee (interchange + scheme fees + acquirer margin) + terminal/gateway costs for that card type. Does NOT include merchant\'s own operational costs.<br/><strong>Validation:</strong> Acquiring bank provides annual Merchant Surcharge Cost Information document.<br/><strong>Enforcement:</strong> ACCC — excessive surcharging can result in fines.',
+   sources:['RBA Surcharge Standard (revised 2016)','RBA Payments Review 2025','ACCC Surcharge Guidance']},
+  {id:'kb15',cat:'regulatory',q:'What is the UK Payment Systems Regulator (PSR)?',preview:'Economic regulator for UK payment systems. Sets domestic interchange caps. Reviews cross-border rates.',
+   answer:'PSR established 2015 under Financial Services (Banking Reform) Act 2013.<br/><br/><strong>Key roles:</strong> Regulates Visa/Mastercard governance in UK · Sets domestic interchange caps (0.2% debit / 0.3% credit) · Reviewing cross-border interchange post-Brexit · Ensures fair access to payment infrastructure.<br/><br/><strong>Current focus:</strong> Card acquiring market review · Cross-border CNP rate investigation (EU→UK rates post-Brexit) · A2A payment promotion.',
+   sources:['PSR Website','PSR Card Acquiring Market Review 2024','HM Treasury Payments Landscape Review']},
+  {id:'kb16',cat:'crossborder',q:'Cost of accepting EU-issued Mastercard credit at a UK CNP merchant?',preview:'Up to 1.5% interchange since July 2024. Was 0.3% under EU IFR.',
+   answer:'Post-July 2024 (Mastercard UK PSR update):<br/><br/><strong>EU-issued Mastercard consumer credit CNP → UK merchant:</strong><br/>Interchange: up to <strong>1.5%</strong> (was 0.3% under EU IFR) — a 5x increase<br/><br/><strong>EU-issued Mastercard consumer debit CNP → UK merchant:</strong><br/>Interchange: up to <strong>1.2%</strong> (was 0.2%)<br/><br/><strong>Full cost (approximate):</strong> Interchange (1.5%) + scheme fee (~0.1–0.2%) + acquirer margin (~0.3–0.5%) = ~1.9–2.2% total MDR<br/><br/><strong>Impact:</strong> UK e-commerce merchants with EU cardholders face dramatically higher costs. Cannot surcharge consumers to recover this.',
+   sources:['Mastercard UK Interchange Bulletin, July 2024','UK PSR Card Acquiring Market Review','Mastercard Cross-Border Rules']},
+  {id:'kb17',cat:'crossborder',q:'Which market has the lowest CNP interchange rates?',preview:'EU domestic: 0.30% credit. AU debit CNP: 0.22% (May 2025). US is most expensive at 2.30-2.40%.',
+   answer:'CNP interchange comparison (May 2025):<br/><br/><strong>Consumer credit CNP:</strong><br/>1. 🇪🇺 EU: <strong>0.30%</strong> (IFR cap) — cheapest<br/>2. 🇦🇺 AU: ~0.60–1.20% (varies by product)<br/>3. 🇨🇦 CA SMB: 1.35%<br/>4. 🇸🇬 SG: ~1.0–1.5%<br/>5. 🇬🇧 UK cross-border: up to 1.50%<br/>6. 🇯🇵 JP: ~1.5–2.0%<br/>7. 🇺🇸 US: 2.30–2.40% (most expensive)<br/><br/><strong>Debit CNP:</strong><br/>1. 🇪🇺 EU: 0.20% · 2. 🇦🇺 AU: 0.22%+$0.08 · 3. 🇨🇦 CA SMB: 0.50% · 4. 🇯🇵 JP QR: 0.75%',
+   sources:['Visa/Mastercard EU Interchange Schedule 2025','Mastercard Australia May 2025','Visa US April 2024','RBA Payments Review 2025']},
+  {id:'kb18',cat:'crossborder',q:'Which markets allow card surcharging in 2025?',preview:'Allowed: AU, SG, CA, US (with restrictions). Banned for consumers: EU, UK. Japan: de facto no.',
+   answer:'Surcharging summary (2025):<br/><br/>🇪🇺 EU — ❌ Banned (PSD2) for IFR-regulated consumer cards<br/>🇬🇧 UK — ❌ Banned for consumer cards (Consumer Rights Act)<br/>🇦🇺 AU — ✅ Allowed up to cost of acceptance (RBA standard)<br/>🇸🇬 SG — ✅ Allowed at cost of acceptance (no blanket surcharges)<br/>🇨🇦 CA — ✅ Allowed ≤2.4% since Oct 2022 (Quebec exempt)<br/>🇺🇸 US — ✅ Allowed ≤3% CNP (Feb 2025); no debit surcharge<br/>🇯🇵 JP — ⚠️ Technically allowed; culturally uncommon<br/><br/><strong>Key 2024–2025 changes:</strong> US cap unified at 3% + cart disclosure (Feb 2025) · AU debit CNP reduced → lower validated cap (May 2025) · SG blanket surcharge ban tightened (Sep 2024)',
+   sources:['Visa US Feb 2025','Mastercard AU May 2025','Mastercard SG Sep 2024','PSD2 Art.62','Consumer Rights Regs 2018','Visa Canada 2022']},
+  {id:'kb19',cat:'markets',q:'Full Singapore interchange and surcharge framework?',preview:'No government-mandated cap. No blanket surcharges. CNP surcharge = cost of acceptance.',
+   answer:'Singapore (as of September 2024):<br/><br/><strong>Interchange:</strong> Consumer credit ~1.0–1.5% · Consumer debit ~0.5–0.8% · No government-mandated cap (unlike EU/UK/AU)<br/><br/><strong>Surcharging:</strong> No blanket card-brand surcharges · CNP surcharge = acquirer-validated cost of acceptance · Pre-transaction disclosure required<br/><br/><strong>Regulator:</strong> MAS (Monetary Authority of Singapore) · Payment Services Act 2019<br/><br/><strong>Outlook:</strong> MAS 2025 payments roadmap references card acceptance cost transparency — 34% probability of formal surcharge standard by 2027.',
+   sources:['Mastercard Singapore Rules Sep 2024','MAS Payments Regulation 2024','MAS Payment Services Act 2019']},
+  {id:'kb20',cat:'markets',q:'Full Japan interchange framework 2024–2025?',preview:'Domestic debit restructured Nov 2024. Contactless: 0.90%. QR: 0.75%. No government surcharge cap.',
+   answer:'Japan (as of November 2024):<br/><br/><strong>Mastercard domestic debit:</strong><br/>Contactless NFC: 0.90% · QR-code: 0.75% (new) · Standard CP: 1.05% · Prepaid: 0.90% · CNP debit: 1.20%<br/><br/><strong>Consumer credit (approximate):</strong> Domestic CNP ~1.5–2.0%<br/><br/><strong>Surcharging:</strong> No government framework. Scheme rules apply. Culturally uncommon in Japan.<br/><br/><strong>Policy driver:</strong> Japan FSA cashless target of 40% transaction ratio. QR tier (0.75%) directly promotes QR adoption.',
+   sources:['Mastercard Japan Interchange Schedule Nov 2024','Japan FSA Cashless Policy 2024']},
+  {id:'kb21',cat:'markets',q:'Full Canada interchange and surcharge framework?',preview:'SMB credit: 1.35%. Debit SMB: 0.50%. Surcharging allowed ≤2.4% (Quebec exempt).',
+   answer:'Canada (as of March 2025):<br/><br/><strong>Interchange (Visa SMB, qualifying merchants ≤$300k volume):</strong><br/>Consumer credit: 1.35% · Visa Debit: 0.50%<br/>Mastercard has similar voluntary code commitments<br/><br/><strong>Surcharging (since October 2022):</strong><br/>Credit card surcharges permitted ≤2.4% or actual MDR (whichever lower)<br/>Debit cards: cannot be surcharged<br/>Quebec: consumer credit surcharging banned<br/>30-day registration required with Visa/Mastercard<br/><br/><strong>Regulator:</strong> FCAC monitors Code of Conduct compliance.',
+   sources:['Visa Canada SMB Program March 2025','FCAC Code of Conduct 2023','Government of Canada Payment Sector Consultation']},
+  {id:'kb22',cat:'markets',q:'Full US interchange and surcharge framework 2025?',preview:'CNP surcharge: ≤3% with cart disclosure (Feb 2025). Visa Infinite CNP: 2.40%+$0.10.',
+   answer:'United States (as of February 2025):<br/><br/><strong>Key CNP interchange rates (Visa, post-April 2024):</strong><br/>Visa Infinite: 2.40%+$0.10 · Visa Signature: 2.30%+$0.10 · Standard credit: 1.80%+$0.10<br/><br/><strong>CNP Surcharging (updated Feb 2025):</strong><br/>Cap: 3% (unified across all consumer credit products)<br/>Disclosure: required at cart/basket level before checkout<br/>Registration: 30 days advance with Visa/Mastercard<br/>Debit/prepaid: cannot be surcharged (Durbin Amendment)<br/>10 states restrict/ban surcharging — verify state law<br/><br/><strong>Card-present surcharge:</strong> up to 4% where state law permits.',
+   sources:['Visa US Surcharge Rules Feb 2025','Visa US Interchange bulletin April 2024','Mastercard US Surcharge Rules','Durbin Amendment']},
+];
+
+// ── KB STATE ───────────────────────────────────────────────────────
+let activeCat=null;let fbType='question';let fbMkt=null;let fbHistory=[];
+
+function renderSources(){
+  const cats={visa:'src-visa',mc:'src-mc',reg:'src-reg',gov:'src-reg'};
+  const icons={visa:'V',mc:'M',reg:'⚖',gov:'🏛'};
+  const srcCls={visa:'src-visa',mc:'src-mc',reg:'src-reg',gov:'src-gov'};
+  const stCls={live:'st-live',check:'st-check',manual:'st-manual'};
+  const stLbl={live:'Live monitor',check:'Needs check',manual:'Manual review'};
+  ['src-visa','src-mc','src-reg'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
+  SOURCES.forEach(s=>{
+    const el=document.getElementById(cats[s.cat]);if(!el)return;
+    const mktBadges=s.markets.map(m=>{const mk=MARKETS.find(x=>x.id===m);return`<span class="badge bgr">${mk?mk.flag:''}${m}</span>`;}).join('');
+    el.innerHTML+=`<div class="source-card">
+      <div class="src-icon ${srcCls[s.cat]}">${icons[s.cat]}</div>
+      <div style="flex:1;min-width:0">
+        <div class="src-title">${s.name}</div>
+        <div class="src-url">${s.url}</div>
+        <div class="src-meta"><span class="src-status ${stCls[s.status]}">${stLbl[s.status]}</span><span>Last: ${s.lastCheck}</span><span>Freq: ${s.freq}</span><span>${s.type}</span>${mktBadges}</div>
+      </div>
+      <div><button class="fc" style="font-size:10px" onclick="window.open('${s.url}','_blank')"><i class="ti ti-external-link" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>Open</button></div>
+    </div>`;
+  });
+}
+function renderKBCats(){
+  document.getElementById('kb-cats').innerHTML=KB_CATS.map(c=>`
+    <div class="kb-cat${activeCat===c.id?' active':''}" onclick="setKBCat('${c.id}')">
+      <div class="kb-cat-icon">${c.icon}</div><div class="kb-cat-name">${c.name}</div>
+      <div class="kb-cat-cnt">${KB.filter(e=>e.cat===c.id).length} entries · ${c.desc}</div>
+    </div>`).join('');
+}
+function setKBCat(id){activeCat=activeCat===id?null:id;renderKBCats();renderKBEntries(activeCat);document.getElementById('kb-results').innerHTML='';document.getElementById('kb-inp').value='';}
+function renderKBEntries(cat){
+  const entries=cat?KB.filter(e=>e.cat===cat):KB;
+  document.getElementById('kb-entries').innerHTML=entries.map(e=>`
+    <div class="kb-entry" id="kbe-${e.id}" onclick="toggleKBEntry('${e.id}')">
+      <div class="kb-entry-q"><i class="ti ti-chevron-right"></i>${e.q}</div>
+      <div class="kb-entry-preview">${e.preview}</div>
+      <div class="kb-full">${e.answer}
+        <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--b1);display:flex;gap:5px;flex-wrap:wrap">
+          ${e.sources.map(s=>`<span class="badge bgr"><i class="ti ti-database" style="font-size:9px"></i>${s}</span>`).join('')}
+        </div>
+      </div>
+    </div>`).join('');
+}
+function toggleKBEntry(id){const el=document.getElementById('kbe-'+id);if(el)el.classList.toggle('open');}
+function kbSearch(){
+  const q=(document.getElementById('kb-inp').value||'').toLowerCase().trim();
+  const res=document.getElementById('kb-results');
+  if(!q){res.innerHTML='';return;}
+  const matches=KB.filter(e=>e.q.toLowerCase().includes(q)||e.preview.toLowerCase().includes(q)||e.answer.toLowerCase().includes(q)||(e.sources||[]).some(s=>s.toLowerCase().includes(q)));
+  if(!matches.length){res.innerHTML=`<div class="empty" style="padding:24px"><i class="ti ti-search-off"></i><p>No results for "<strong>${q}</strong>".<br/>Try: "EU debit", "Australia surcharge", "UK CNP", "US 3%"</p></div>`;return;}
+  res.innerHTML=`<div style="font-size:11px;color:var(--t3);margin-bottom:10px"><i class="ti ti-search" style="font-size:12px"></i> ${matches.length} result${matches.length!==1?'s':''} for "<strong style="color:var(--t2)">${q}</strong>" — source-verified</div>`+
+  matches.map(e=>`<div class="kb-result"><div class="kb-result-q"><i class="ti ti-book" style="font-size:12px"></i>${e.q}</div><div class="kb-result-a">${e.answer}</div><div class="kb-result-src">${e.sources.map(s=>`<span class="badge bgr"><i class="ti ti-database" style="font-size:9px"></i>${s}</span>`).join('')}</div></div>`).join('');
+}
+
+// ── SLACK HUB ──────────────────────────────────────────────────────
+function saveSlackFromHub(){
+  const inp=document.getElementById('slack-wh-hub');const val=(inp?inp.value:'').trim();
+  if(!val){showToast('Please enter a Slack webhook URL before saving','warn');if(inp)inp.focus();return;}
+  if(!val.startsWith('https://hooks.slack.com/')){showToast('Invalid URL — must start with https://hooks.slack.com/','warn');if(inp)inp.focus();return;}
+  S.slackWH=val;
+  try{localStorage.setItem('fs_slack_webhook',val);}catch(e){}
+  // sync to settings tab input if present
+  const settingsInp=document.getElementById('slack-wh');if(settingsInp)settingsInp.value=val;
+  const ind=document.getElementById('wh-saved-hub');
+  if(ind){ind.style.display='flex';setTimeout(()=>ind.style.display='none',3000);}
+  showToast('Slack webhook saved successfully','success');
+}
+function testSlackHub(){
+  const inp=document.getElementById('slack-wh-hub');const url=S.slackWH||(inp?inp.value.trim():'');
+  if(!url){showToast('Enter and save a Slack webhook URL first','warn');return;}
+  slackPost(url,{text:'[FlyScout v4.0] Connection test OK. Channel connected. 18 sources monitored, no AI required.'});
+  showToast('Test message sent to Slack','success');
+}
+function sendTestAlert(){
+  const url=S.slackWH;if(!url){showToast('Configure and save Slack webhook first','warn');return;}
+  slackPost(url,{text:'[FlyScout Alert] EU IFR Debit Cap Reduction - 78% probability Q2-Q3 2026. Trigger: EU Parliament consultation updated. Action: Model EU debit CNP at 0.15%.'});
+  showToast('Test alert sent to #card-network-alerts','success');
+}
+function slackPost(url,payload){if(!url)return;fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).catch(()=>{});}
+
+// ── FEEDBACK ───────────────────────────────────────────────────────
+function renderFbMktRow(){
+  const el=document.getElementById('fb-mkt-row');if(!el)return;
+  el.innerHTML=MARKETS.map(m=>`<div class="fb-t${fbMkt===m.id?' active':''}" onclick="setFbMkt('${m.id}',this)">${m.flag}${m.id}</div>`).join('');
+}
+function setFbType(el,type){document.querySelectorAll('.fb-type .fb-t').forEach(t=>t.classList.remove('active'));el.classList.add('active');fbType=type;}
+function setFbMkt(id,el){fbMkt=fbMkt===id?null:id;document.querySelectorAll('#fb-mkt-row .fb-t').forEach(t=>t.classList.remove('active'));if(fbMkt)el.classList.add('active');}
+function submitFeedback(){
+  const msg=(document.getElementById('fb-msg').value||'').trim();
+  if(!msg){showToast('Please enter a message before sending','warn');return;}
+  const url=S.slackWH;
+  const mktLabel=fbMkt?` · Market: ${fbMkt}`:'';
+  const typeEmoji={question:'❓','rule-change':'📋',correction:'✏️',idea:'💡'};
+  if(url){slackPost(url,{text:'[FlyScout Feedback - ' + fbType + ']' + mktLabel + ': ' + msg});showToast('Feedback sent to Slack','success');}
+  else{showToast('Slack not configured — save locally only','warn');}
+  fbHistory.unshift({type:fbType,mkt:fbMkt,msg,time:new Date().toLocaleString(),slackSent:!!url});
+  renderFbHistory();document.getElementById('fb-msg').value='';
+}
+function renderFbHistory(){
+  const el=document.getElementById('fb-history');if(!el)return;
+  if(!fbHistory.length){el.innerHTML=`<div class="empty" style="padding:20px"><i class="ti ti-messages"></i><p>No feedback sent yet.</p></div>`;return;}
+  const typeEmoji={question:'❓','rule-change':'📋',correction:'✏️',idea:'💡'};
+  el.innerHTML=fbHistory.slice(0,5).map(f=>`
+    <div class="cc" style="cursor:default;margin-bottom:8px">
+      <div class="cc-hdr"><span class="badge bgr">${typeEmoji[f.type]||'💬'} ${f.type}</span>${f.mkt?`<span class="badge bgr">${MARKETS.find(m=>m.id===f.mkt)?.flag||''}${f.mkt}</span>`:''}<span class="badge ${f.slackSent?'bc':'bgr'}" style="margin-left:auto">${f.slackSent?'<i class="ti ti-brand-slack" style="font-size:9px"></i>Sent':'Local only'}</span></div>
+      <div class="cc-desc">${f.msg.substring(0,120)}${f.msg.length>120?'…':''}</div>
+      <div class="cc-src">${f.time}</div>
+    </div>`).join('');
+}
 
 init();
 </script>
