@@ -261,15 +261,89 @@
 
     <!-- SOURCE MONITOR -->
     <div class="panel" id="panel-sources">
-      <div style="background:var(--blue-glow);border:1px solid var(--blue-ring);border-radius:var(--r2);padding:12px 15px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start">
-        <i class="ti ti-antenna" style="color:var(--blue-ll);font-size:18px;flex-shrink:0;margin-top:1px"></i>
-        <div><div style="font-size:12px;font-weight:600;margin-bottom:3px">18 Primary Sources — No AI Required</div>
-        <div style="font-size:11px;color:var(--t2);line-height:1.6">FlyScout polls these sources directly. Changes are detected by rule-based content comparison — no AI needed. Click any source to open it.</div></div>
-      </div>
-      <div class="sec-hdr"><div class="sec-title">Visa Sources</div><span class="badge bv">4 sources</span></div><div id="src-visa"></div>
-      <div class="sec-hdr" style="margin-top:4px"><div class="sec-title">Mastercard Sources</div><span class="badge bm">4 sources</span></div><div id="src-mc"></div>
-      <div class="sec-hdr" style="margin-top:4px"><div class="sec-title">Regulatory &amp; Government</div><span class="badge bteal">10 sources</span></div><div id="src-reg"></div>
+
+  <!-- MONITORING STATUS HEADER -->
+  <div class="sec-hdr">
+    <div class="sec-title">
+      <i class="ti ti-radar" style="font-size:14px;vertical-align:-2px;margin-right:6px;color:var(--g-t)"></i>
+      Source Monitoring Status
     </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <div class="last-scan-badge" id="last-scan-badge">
+        <div class="mon-pulse" style="background:var(--g-t)"></div>
+        Last scan: <span id="last-scan-time">calculating…</span>
+      </div>
+      <button class="fc on" style="font-size:10px" onclick="runScan()">
+        <i class="ti ti-refresh" style="font-size:11px;vertical-align:-1px;margin-right:3px"></i>Scan now
+      </button>
+    </div>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="mon-grid" id="mon-grid">
+    <div class="mon-card" style="--mc-color:var(--blue-ll)">
+      <div class="mon-val" style="color:var(--blue-ll)" id="mon-total">18</div>
+      <div class="mon-label">Sources monitored</div>
+      <div class="mon-sub"><i class="ti ti-antenna" style="font-size:11px"></i>Visa · MC · Regulators · Gov</div>
+    </div>
+    <div class="mon-card" style="--mc-color:var(--g-t)">
+      <div class="mon-val" style="color:var(--g-t)" id="mon-online">16</div>
+      <div class="mon-label">Sources online</div>
+      <div class="mon-sub"><div class="mon-pulse" style="background:var(--g-t)"></div><span id="mon-offline-txt">2 need attention</span></div>
+    </div>
+    <div class="mon-card" style="--mc-color:var(--a-t)">
+      <div class="mon-val" style="color:var(--a-t)" id="mon-changes">2</div>
+      <div class="mon-label">Changes detected today</div>
+      <div class="mon-sub"><i class="ti ti-eye" style="font-size:11px"></i><span id="mon-changes-sub">Across 2 sources</span></div>
+    </div>
+    <div class="mon-card" style="--mc-color:var(--tl-t)">
+      <div class="mon-val" style="color:var(--tl-t)" id="mon-scans">47</div>
+      <div class="mon-label">Scans today</div>
+      <div class="mon-sub"><i class="ti ti-clock" style="font-size:11px"></i>Every 30 min · auto</div>
+    </div>
+    <div class="mon-card" style="--mc-color:var(--g-t)">
+      <div class="mon-val" style="color:var(--g-t)" id="mon-health">89%</div>
+      <div class="mon-label">Source health</div>
+      <div class="health-bar"><div class="health-fill" id="health-fill" style="width:89%;background:var(--g-t)"></div></div>
+    </div>
+  </div>
+
+  <!-- SCAN HISTORY TABLE -->
+  <div class="sec-hdr">
+    <div class="sec-title">Scan History</div>
+    <span class="badge bgr" id="scan-hist-count">Showing last 10 scans</span>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
+    <table class="scan-table">
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>Source</th>
+          <th>Market</th>
+          <th>Status</th>
+          <th>Result</th>
+          <th>Response</th>
+        </tr>
+      </thead>
+      <tbody id="scan-history-body"></tbody>
+    </table>
+  </div>
+
+  <!-- SOURCE CARDS (existing) -->
+  <div style="background:var(--blue-glow);border:1px solid var(--blue-ring);border-radius:var(--r2);padding:12px 15px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start">
+    <i class="ti ti-antenna" style="color:var(--blue-ll);font-size:18px;flex-shrink:0;margin-top:1px"></i>
+    <div>
+      <div style="font-size:12px;font-weight:600;margin-bottom:3px">18 Primary Sources — No AI Required</div>
+      <div style="font-size:11px;color:var(--t2);line-height:1.6">FlyScout polls these sources directly. Changes are detected by rule-based content comparison. Click any source to open it in your browser.</div>
+    </div>
+  </div>
+  <div class="sec-hdr"><div class="sec-title">Visa Sources</div><span class="badge bv">4 sources</span></div>
+  <div id="src-visa"></div>
+  <div class="sec-hdr" style="margin-top:4px"><div class="sec-title">Mastercard Sources</div><span class="badge bm">4 sources</span></div>
+  <div id="src-mc"></div>
+  <div class="sec-hdr" style="margin-top:4px"><div class="sec-title">Regulatory &amp; Government</div><span class="badge bteal">10 sources</span></div>
+  <div id="src-reg"></div>
+</div>
     <!-- KNOWLEDGE BASE -->
     <div class="panel" id="panel-kb">
       <div style="background:var(--p-bg);border:1px solid var(--p-b);border-radius:var(--r2);padding:12px 15px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start">
